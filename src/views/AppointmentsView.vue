@@ -11,6 +11,7 @@
       <form @submit.prevent="saveAppointment">
         <div class="form-row">
           <input v-model="newAppointment.time" type="time" required>
+          <input v-model="newAppointment.date" type="date" required>
           <input v-model="newAppointment.client" placeholder="Клиент" required>
         </div>
         <div class="form-row">
