@@ -18,7 +18,6 @@ import AppSidebar from './components/layout/AppSidebar.vue'
 
 .content {
   margin-left: 240px;
-  /* ширина сайдбара */
   width: 100%;
   padding: 20px;
   background: #f8fafc;

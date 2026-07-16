@@ -7,7 +7,7 @@
       </button>
     </div>
 
-    <!-- Форма -->
+    <!-- Форма добавления -->
     <div v-if="showAddForm" class="add-form">
       <h3>{{ $t('newClient') }}</h3>
       <form @submit.prevent="saveClient">
@@ -44,7 +44,6 @@
         </tr>
       </tbody>
     </table>
-    <p v-else>Загрузка...</p>
   </div>
 </template>
 
