@@ -85,13 +85,8 @@ const saveClient = async () => {
   if (error) {
     alert('Ошибка: ' + error.message)
   } else {
-    // Логирование
-    await supabase.from('logs').insert([{
-      action: 'Добавлен клиент',
-      user_email: 'admin@auto.lv', // временно
-      details: newClient.value.name
-    }])
-    console.log('Попытка логирования:', newClient.value.name)
+    // Простое логирование
+    console.log('Клиент добавлен:', newClient.value.name)
     alert('Клиент добавлен!')
     newClient.value = { name: '', phone: '', email: '', car_model: '', car_plate: '', status: 'Оформление' }
     showAddForm.value = false
