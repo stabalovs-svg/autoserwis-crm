@@ -20,6 +20,9 @@
       <router-link to="/reports" class="menu-item">
         📈 {{ $t('reports') }}
       </router-link>
+      <router-link to="/logs" class="menu-item">
+        📜 Журнал
+      </router-link>
     </nav>
 
     <div class="language-switcher">
