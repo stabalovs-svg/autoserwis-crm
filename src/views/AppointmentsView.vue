@@ -2,21 +2,34 @@
   <div>
     <div class="page-header">
       <h1>{{ $t('appointments') }}</h1>
-      <button @click="newAppointment" class="add-btn">{{ $t('newAppointment') }}</button>
+      <button @click="showForm = !showForm" class="add-btn">{{ $t('newAppointment') }}</button>
     </div>
 
-    <div class="calendar-info">
-      <p>{{ $t('today') }}: {{ new Date().toLocaleDateString(locale) }}</p>
+    <!-- Форма -->
+    <div v-if="showForm" class="add-form">
+      <h3>Новая запись</h3>
+      <form @submit.prevent="saveAppointment">
+        <input v-model="newAppointment.client" placeholder="Клиент" required>
+        <input v-model="newAppointment.car" placeholder="Автомобиль">
+        <input v-model="newAppointment.time" placeholder="Время" type="time">
+        <input v-model="newAppointment.service" placeholder="Услуга">
+        <select v-model="newAppointment.status">
+          <option value="В работе">В работе</option>
+          <option value="Ожидает">Ожидает</option>
+        </select>
+        <button type="submit">Сохранить запись</button>
+      </form>
     </div>
 
+    <!-- Таблица -->
     <table class="appointments-table">
       <thead>
         <tr>
-          <th>{{ $t('time') }}</th>
-          <th>{{ $t('client') }}</th>
-          <th>{{ $t('car') }}</th>
-          <th>{{ $t('service') }}</th>
-          <th>{{ $t('status') }}</th>
+          <th>Время</th>
+          <th>Клиент</th>
+          <th>Автомобиль</th>
+          <th>Услуга</th>
+          <th>Статус</th>
         </tr>
       </thead>
       <tbody>
@@ -24,8 +37,8 @@
           <td>{{ appointment.time }}</td>
           <td>{{ appointment.client }}</td>
           <td>{{ appointment.car }}</td>
-          <td>{{ $t(appointment.service) }}</td>
-          <td :class="appointment.statusClass">{{ $t(appointment.statusKey) }}</td>
+          <td>{{ appointment.service }}</td>
+          <td>{{ appointment.status }}</td>
         </tr>
       </tbody>
     </table>
@@ -33,35 +46,35 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/services/supabase'
 
-const { locale } = useI18n()
+const appointments = ref([])
+const showForm = ref(false)
+const newAppointment = ref({
+  client: '',
+  car: '',
+  time: '',
+  service: '',
+  status: 'Ожидает'
+})
 
-const appointments = ref([
-  {
-    id: 1,
-    time: '09:00',
-    client: 'Иванов И.И.',
-    car: 'BMW X5',
-    service: 'oilChange',
-    statusKey: 'inWork',
-    statusClass: 'status-working'
-  },
-  {
-    id: 2,
-    time: '11:30',
-    client: 'Петров С.',
-    car: 'Toyota Camry',
-    service: 'diagnostics',
-    statusKey: 'waiting',
-    statusClass: 'status-waiting'
-  }
-])
-
-const newAppointment = () => {
-  alert('Форма новой записи — будет позже')
+const fetchAppointments = async () => {
+  const { data } = await supabase.from('appointments').select('*')
+  appointments.value = data || []
 }
+
+const saveAppointment = async () => {
+  const { error } = await supabase.from('appointments').insert([newAppointment.value])
+  if (!error) {
+    alert('Запись добавлена!')
+    newAppointment.value = { client: '', car: '', time: '', service: '', status: 'Ожидает' }
+    showForm.value = false
+    fetchAppointments()
+  }
+}
+
+onMounted(fetchAppointments)
 </script>
 
 <style scoped>
