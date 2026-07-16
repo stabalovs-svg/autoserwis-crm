@@ -9,13 +9,17 @@
     <div v-if="showForm" class="add-form">
       <h3>Новая запись</h3>
       <form @submit.prevent="saveAppointment">
-        <input v-model="newAppointment.client" placeholder="Клиент" required>
-        <input v-model="newAppointment.car" placeholder="Автомобиль">
-        <input v-model="newAppointment.time" placeholder="Время" type="time">
-        <input v-model="newAppointment.service" placeholder="Услуга">
+        <div class="form-row">
+          <input v-model="newAppointment.time" type="time" required>
+          <input v-model="newAppointment.client" placeholder="Клиент" required>
+        </div>
+        <div class="form-row">
+          <input v-model="newAppointment.car" placeholder="Автомобиль">
+          <input v-model="newAppointment.service" placeholder="Услуга">
+        </div>
         <select v-model="newAppointment.status">
-          <option value="В работе">В работе</option>
           <option value="Ожидает">Ожидает</option>
+          <option value="В работе">В работе</option>
         </select>
         <button type="submit">Сохранить запись</button>
       </form>
@@ -52,9 +56,9 @@ import { supabase } from '@/services/supabase'
 const appointments = ref([])
 const showForm = ref(false)
 const newAppointment = ref({
+  time: '',
   client: '',
   car: '',
-  time: '',
   service: '',
   status: 'Ожидает'
 })
@@ -66,9 +70,11 @@ const fetchAppointments = async () => {
 
 const saveAppointment = async () => {
   const { error } = await supabase.from('appointments').insert([newAppointment.value])
-  if (!error) {
+  if (error) {
+    alert('Ошибка: ' + error.message)
+  } else {
     alert('Запись добавлена!')
-    newAppointment.value = { client: '', car: '', time: '', service: '', status: 'Ожидает' }
+    newAppointment.value = { time: '', client: '', car: '', service: '', status: 'Ожидает' }
     showForm.value = false
     fetchAppointments()
   }
@@ -94,6 +100,25 @@ onMounted(fetchAppointments)
   cursor: pointer;
 }
 
+.add-form {
+  background: #f8fafc;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 8px;
+}
+
 .appointments-table {
   width: 100%;
   border-collapse: collapse;
@@ -108,19 +133,5 @@ onMounted(fetchAppointments)
 
 .appointments-table th {
   background: #f1f5f9;
-}
-
-.status-working {
-  color: #166534;
-  background: #dcfce7;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.status-waiting {
-  color: #854d0e;
-  background: #fef3c7;
-  padding: 4px 8px;
-  border-radius: 4px;
 }
 </style>
