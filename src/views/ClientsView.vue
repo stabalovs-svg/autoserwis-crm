@@ -82,13 +82,15 @@ const getTranslatedStatus = (status) => {
 
 const saveClient = async () => {
   const { error } = await supabase.from('clients').insert([newClient.value])
-  if (error) {
-    alert('Ошибка: ' + error.message)
-  } else {
+  if (!error) {
+    // Логирование
+    await supabase.from('logs').insert([{
+      action: 'Добавлен клиент',
+      user_email: 'user@example.com', // позже заменим на auth.user.email
+      details: newClient.value.name
+    }])
     alert('Клиент добавлен!')
-    newClient.value = { name: '', phone: '', email: '', car_model: '', car_plate: '', status: 'Оформление' }
-    showAddForm.value = false
-    fetchClients()
+    // остальное
   }
 }
 
