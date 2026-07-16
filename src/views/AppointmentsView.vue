@@ -74,6 +74,12 @@ const saveAppointment = async () => {
   if (error) {
     alert('Ошибка: ' + error.message)
   } else {
+    // Логирование
+    await supabase.from('logs').insert([{
+      action: 'Добавлена запись',
+      user_email: 'admin@auto.lv',
+      details: newAppointment.value.client
+    }])
     alert('Запись добавлена!')
     newAppointment.value = { time: '', client: '', car: '', service: '', status: 'Ожидает' }
     showForm.value = false
