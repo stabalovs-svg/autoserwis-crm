@@ -1,29 +1,41 @@
 <template>
   <div>
     <div class="page-header">
-      <h1>Склад запчастей</h1>
-      <button @click="addPart" class="add-btn">+ Добавить запчасть</button>
+      <h1>{{ $t('inventory') }}</h1>
+      <button @click="showForm = !showForm" class="add-btn">+ Добавить запчасть</button>
     </div>
 
+    <!-- Форма -->
+    <div v-if="showForm" class="add-form">
+      <h3>Новая запчасть</h3>
+      <form @submit.prevent="savePart">
+        <input v-model="newPart.name" placeholder="Название" required>
+        <input v-model="newPart.article" placeholder="Артикул">
+        <input v-model="newPart.quantity" type="number" placeholder="Количество">
+        <input v-model="newPart.buy_price" type="number" placeholder="Цена закупки">
+        <input v-model="newPart.sell_price" type="number" placeholder="Цена продажи">
+        <button type="submit">Сохранить</button>
+      </form>
+    </div>
+
+    <!-- Таблица -->
     <table class="inventory-table">
       <thead>
         <tr>
-          <th>Название запчасти</th>
+          <th>Название</th>
           <th>Артикул</th>
           <th>Количество</th>
           <th>Цена закупки</th>
           <th>Цена продажи</th>
-          <th>Статус</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="part in parts" :key="part.id">
           <td>{{ part.name }}</td>
           <td>{{ part.article }}</td>
-          <td :class="{ 'low-stock': part.quantity < 5 }">{{ part.quantity }}</td>
-          <td>{{ part.buyPrice }} €</td>
-          <td>{{ part.sellPrice }} €</td>
-          <td>{{ part.status }}</td>
+          <td>{{ part.quantity }}</td>
+          <td>{{ part.buy_price }} €</td>
+          <td>{{ part.sell_price }} €</td>
         </tr>
       </tbody>
     </table>
@@ -31,13 +43,37 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/services/supabase'
 
-const parts = ref([
-  { id: 1, name: 'Масло моторное 5W-40', article: 'MOT-545', quantity: 23, buyPrice: 12.5, sellPrice: 18.9, status: 'В наличии' },
-  { id: 2, name: 'Тормозные колодки', article: 'BRK-784', quantity: 4, buyPrice: 35, sellPrice: 52, status: 'Мало' },
-  { id: 3, name: 'Фильтр воздушный', article: 'FLT-912', quantity: 12, buyPrice: 8.5, sellPrice: 14, status: 'В наличии' },
-])
+const parts = ref([])
+const showForm = ref(false)
+const newPart = ref({
+  name: '',
+  article: '',
+  quantity: 0,
+  buy_price: 0,
+  sell_price: 0
+})
+
+const fetchParts = async () => {
+  const { data } = await supabase.from('inventory').select('*')
+  parts.value = data || []
+}
+
+const savePart = async () => {
+  const { error } = await supabase.from('inventory').insert([newPart.value])
+  if (error) {
+    alert('Ошибка: ' + error.message)
+  } else {
+    alert('Запчасть добавлена!')
+    newPart.value = { name: '', article: '', quantity: 0, buy_price: 0, sell_price: 0 }
+    showForm.value = false
+    fetchParts()
+  }
+}
+
+onMounted(fetchParts)
 </script>
 
 <style scoped>
@@ -47,6 +83,7 @@ const parts = ref([
   align-items: center;
   margin-bottom: 20px;
 }
+
 .add-btn {
   background: #1e40af;
   color: white;
@@ -55,19 +92,23 @@ const parts = ref([
   border-radius: 6px;
   cursor: pointer;
 }
+
 .inventory-table {
   width: 100%;
   border-collapse: collapse;
 }
+
 .inventory-table th,
 .inventory-table td {
   border: 1px solid #e2e8f0;
   padding: 12px;
   text-align: left;
 }
+
 .inventory-table th {
   background: #f1f5f9;
 }
+
 .low-stock {
   color: #b45309;
   font-weight: bold;
