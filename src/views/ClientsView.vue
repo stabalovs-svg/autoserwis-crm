@@ -91,6 +91,7 @@ const saveClient = async () => {
       user_email: 'admin@auto.lv', // временно
       details: newClient.value.name
     }])
+    console.log('Попытка логирования:', newClient.value.name)
     alert('Клиент добавлен!')
     newClient.value = { name: '', phone: '', email: '', car_model: '', car_plate: '', status: 'Оформление' }
     showAddForm.value = false
