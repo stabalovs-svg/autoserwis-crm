@@ -1,36 +1,38 @@
 <template>
   <div>
     <div class="page-header">
-      <h1>Клиенты автосервиса</h1>
+      <h1>{{ $t('clients') }}</h1>
       <button @click="showAddForm = !showAddForm" class="add-btn">
-        {{ showAddForm ? 'Скрыть форму' : '+ Добавить клиента' }}
+        {{ showAddForm ? $t('hide') : $t('addClient') }}
       </button>
     </div>
 
+    <!-- Форма -->
     <div v-if="showAddForm" class="add-form">
-      <h3>Новый клиент</h3>
+      <h3>{{ $t('newClient') }}</h3>
       <form @submit.prevent="saveClient">
-        <input v-model="newClient.name" placeholder="ФИО" required>
-        <input v-model="newClient.phone" placeholder="Телефон">
-        <input v-model="newClient.email" placeholder="Email" type="email">
-        <input v-model="newClient.car_model" placeholder="Модель автомобиля">
-        <input v-model="newClient.car_plate" placeholder="Номер автомобиля">
+        <input v-model="newClient.name" :placeholder="$t('fullName')" required>
+        <input v-model="newClient.phone" :placeholder="$t('phone')">
+        <input v-model="newClient.email" :placeholder="$t('email')" type="email">
+        <input v-model="newClient.car_model" :placeholder="$t('carModel')">
+        <input v-model="newClient.car_plate" :placeholder="$t('carPlate')">
         <select v-model="newClient.status">
-          <option value="Оформление">Оформление</option>
-          <option value="В ремонте">В ремонте</option>
-          <option value="Ожидает">Ожидает</option>
+          <option value="Оформление">{{ $t('оформление') }}</option>
+          <option value="В ремонте">{{ $t('inRepair') }}</option>
+          <option value="Ожидает">{{ $t('waiting') }}</option>
         </select>
-        <button type="submit">Сохранить клиента</button>
+        <button type="submit">{{ $t('save') }}</button>
       </form>
     </div>
 
+    <!-- Таблица -->
     <table class="clients-table" v-if="clients.length">
       <thead>
         <tr>
-          <th>ФИО</th>
-          <th>Телефон</th>
-          <th>Автомобиль</th>
-          <th>Статус</th>
+          <th>{{ $t('fullName') }}</th>
+          <th>{{ $t('phone') }}</th>
+          <th>{{ $t('carModel') }}</th>
+          <th>{{ $t('status') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -38,16 +40,20 @@
           <td>{{ client.name }}</td>
           <td>{{ client.phone }}</td>
           <td>{{ client.car_model }}</td>
-          <td>{{ client.status }}</td>
+          <td>{{ getTranslatedStatus(client.status) }}</td>
         </tr>
       </tbody>
     </table>
+    <p v-else>Загрузка...</p>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '@/services/supabase'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const clients = ref([])
 const showAddForm = ref(false)
@@ -64,6 +70,15 @@ const fetchClients = async () => {
   const { data, error } = await supabase.from('clients').select('*')
   if (error) console.error(error)
   else clients.value = data || []
+}
+
+const getTranslatedStatus = (status) => {
+  const map = {
+    'Оформление': t('оформление'),
+    'В ремонте': t('inRepair'),
+    'Ожидает': t('waiting')
+  }
+  return map[status] || status
 }
 
 const saveClient = async () => {
