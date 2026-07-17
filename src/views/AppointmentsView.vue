@@ -44,7 +44,15 @@
           <td>{{ appointment.client }}</td>
           <td>{{ appointment.car }}</td>
           <td>{{ appointment.service }}</td>
-          <td>{{ $t(appointment.statusKey) }}</td>
+          <td>
+            {{
+              appointment.status_key === 'inWork' ||
+                appointment.status_key === 'in_work' ||
+                appointment.statusKey === 'inWork'
+                ? $t('inWork')
+                : $t('waiting')
+            }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -72,10 +80,19 @@ const fetchAppointments = async () => {
     .select('*')
 
   if (error) {
-    console.error('Ошибка загрузки записей:', error)
+    console.error(
+      'Ошибка загрузки записей:',
+      error
+    )
+
     appointments.value = []
     return
   }
+
+  console.log(
+    'APPOINTMENTS DATA:',
+    data
+  )
 
   appointments.value = data || []
 }
@@ -108,6 +125,8 @@ const saveAppointment = async () => {
     service: '',
     statusKey: 'waiting'
   }
+
+
 
   showForm.value = false
 
