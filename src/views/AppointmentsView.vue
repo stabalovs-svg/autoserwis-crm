@@ -106,11 +106,38 @@ const saveAppointment = async () => {
   const { error } = await supabase
     .from('appointments')
     .insert([appointmentToSave])
+    .select()
+    .single()
 
   if (error) {
-    console.error('Ошибка сохранения записи:', error)
+    console.error(
+      'Ошибка сохранения записи:',
+      error
+    )
+
     alert('Ошибка: ' + error.message)
     return
+  }
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  const { error: logError } = await supabase
+    .from('logs')
+    .insert([
+      {
+        action: 'Добавлена запись',
+        user_email: user?.email || '',
+        details: newAppointment.value.client
+      }
+    ])
+
+  if (logError) {
+    console.error(
+      'Ошибка записи в журнал:',
+      logError
+    )
   }
 
   alert('Запись добавлена!')
