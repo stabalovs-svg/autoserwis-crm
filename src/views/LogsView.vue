@@ -7,7 +7,7 @@
                     <th>{{ $t('date') }}</th>
                     <th>{{ $t('action') }}</th>
                     <th>{{ $t('user') }}</th>
-                    <th>{{ $t('details') }}</th>
+                    <th>{{ $t('client') }}</th>
                 </tr>
             </thead>
             <tbody>
