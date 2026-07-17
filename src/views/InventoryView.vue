@@ -2,31 +2,29 @@
   <div>
     <div class="page-header">
       <h1>{{ $t('inventory') }}</h1>
-      <button @click="showForm = !showForm" class="add-btn">+ Добавить запчасть</button>
+      <button @click="showForm = !showForm" class="add-btn">{{ $t('addPart') }}</button>
     </div>
 
-    <!-- Форма -->
     <div v-if="showForm" class="add-form">
-      <h3>Новая запчасть</h3>
+      <h3>{{ $t('newPart') }}</h3>
       <form @submit.prevent="savePart">
-        <input v-model="newPart.name" placeholder="Название" required>
-        <input v-model="newPart.article" placeholder="Артикул">
-        <input v-model="newPart.quantity" type="number" placeholder="Количество">
-        <input v-model="newPart.buy_price" type="number" placeholder="Цена закупки">
-        <input v-model="newPart.sell_price" type="number" placeholder="Цена продажи">
-        <button type="submit">Сохранить</button>
+        <input v-model="newPart.name" :placeholder="$t('partName')" required>
+        <input v-model="newPart.article" :placeholder="$t('article')">
+        <input v-model="newPart.quantity" type="number" :placeholder="$t('quantity')">
+        <input v-model="newPart.buy_price" type="number" :placeholder="$t('buyPrice')">
+        <input v-model="newPart.sell_price" type="number" :placeholder="$t('sellPrice')">
+        <button type="submit">{{ $t('save') }}</button>
       </form>
     </div>
 
-    <!-- Таблица -->
     <table class="inventory-table">
       <thead>
         <tr>
-          <th>Название</th>
-          <th>Артикул</th>
-          <th>Количество</th>
-          <th>Цена закупки</th>
-          <th>Цена продажи</th>
+          <th>{{ $t('partName') }}</th>
+          <th>{{ $t('article') }}</th>
+          <th>{{ $t('quantity') }}</th>
+          <th>{{ $t('buyPrice') }}</th>
+          <th>{{ $t('sellPrice') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -75,6 +73,7 @@ const savePart = async () => {
 
 onMounted(fetchParts)
 </script>
+
 
 <style scoped>
 .page-header {
