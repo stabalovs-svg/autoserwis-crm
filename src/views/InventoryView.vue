@@ -46,6 +46,7 @@
 import { ref, onMounted } from 'vue'
 import { supabase } from '@/services/supabase'
 
+const searchQuery = ref('')
 const parts = ref([])
 const showForm = ref(false)
 const newPart = ref({

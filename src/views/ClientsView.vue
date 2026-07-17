@@ -55,7 +55,7 @@ import { supabase } from '@/services/supabase'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-
+const searchQuery = ref('')
 const clients = ref([])
 const showAddForm = ref(false)
 const newClient = ref({
