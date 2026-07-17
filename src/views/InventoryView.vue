@@ -5,6 +5,8 @@
       <button @click="showForm = !showForm" class="add-btn">{{ $t('addPart') }}</button>
     </div>
 
+    <input v-model="searchQuery" :placeholder="$t('search')" class="search-input">
+
     <div v-if="showForm" class="add-form">
       <h3>{{ $t('newPart') }}</h3>
       <form @submit.prevent="savePart" class="form-grid">

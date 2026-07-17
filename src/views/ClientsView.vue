@@ -7,6 +7,8 @@
       </button>
     </div>
 
+    <input v-model="searchQuery" :placeholder="$t('search')" class="search-input">
+
     <!-- Форма добавления -->
     <div v-if="showAddForm" class="add-form">
       <h3>{{ $t('newClient') }}</h3>

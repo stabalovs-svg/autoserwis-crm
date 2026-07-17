@@ -215,7 +215,7 @@ const messages = {
     quantity: 'Daudzums',
     buyPrice: 'Pirkuma cena',
     sellPrice: 'Pārdošanas cena',
-    logs: 'Log',
+    logs: 'Izmaiņu žurnāls',
   },
 }
 
