@@ -7,7 +7,7 @@
 
     <div v-if="showForm" class="add-form">
       <h3>{{ $t('newPart') }}</h3>
-      <form @submit.prevent="savePart">
+      <form @submit.prevent="savePart" class="form-grid">
         <input v-model="newPart.name" :placeholder="$t('partName')" required>
         <input v-model="newPart.article" :placeholder="$t('article')">
         <input v-model="newPart.quantity" type="number" :placeholder="$t('quantity')">
@@ -111,5 +111,11 @@ onMounted(fetchParts)
 .low-stock {
   color: #b45309;
   font-weight: bold;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
 }
 </style>

@@ -21,7 +21,7 @@
         📈 {{ $t('reports') }}
       </router-link>
       <router-link to="/logs" class="menu-item">
-        📜 Журнал
+        📜 {{ $t('logs') }}
       </router-link>
     </nav>
 
