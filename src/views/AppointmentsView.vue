@@ -2,32 +2,36 @@
   <div>
     <div class="page-header">
       <h1>{{ $t('appointments') }}</h1>
-      <button @click="showForm = !showForm" class="add-btn">{{ $t('newAppointment') }}</button>
+      <button @click="showForm = !showForm" class="add-btn">
+        {{ showForm ? $t('hide') : $t('newAppointment') }}
+      </button>
     </div>
+
+    <!-- Поиск -->
+    <input v-model="searchQuery" :placeholder="$t('search')" class="search-input">
 
     <!-- Форма -->
     <div v-if="showForm" class="add-form">
-      <h3>Новая запись</h3>
+      <h3>{{ $t('newAppointment') }}</h3>
       <form @submit.prevent="saveAppointment">
         <div class="form-row">
           <input v-model="newAppointment.time" type="time" required>
-          <input v-model="newAppointment.date" type="date" required>
-          <input v-model="newAppointment.client" placeholder="Клиент" required>
+          <input v-model="newAppointment.client" :placeholder="$t('client')" required>
         </div>
         <div class="form-row">
-          <input v-model="newAppointment.car" placeholder="Автомобиль">
-          <input v-model="newAppointment.service" placeholder="Услуга">
+          <input v-model="newAppointment.car" :placeholder="$t('car')">
+          <input v-model="newAppointment.service" :placeholder="$t('service')">
         </div>
         <select v-model="newAppointment.status">
-          <option value="Ожидает">Ожидает</option>
-          <option value="В работе">В работе</option>
+          <option value="Ожидает">{{ $t('waiting') }}</option>
+          <option value="В работе">{{ $t('inWork') }}</option>
         </select>
-        <button type="submit">Сохранить запись</button>
+        <button type="submit">{{ $t('save') }}</button>
       </form>
     </div>
 
     <!-- Таблица -->
-    <table class="appointments-table">
+    <table class="appointments-table" v-if="appointments.length">
       <thead>
         <tr>
           <th>{{ $t('time') }}</th>
@@ -38,12 +42,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="appointment in appointments" :key="appointment.id">
+        <tr v-for="appointment in filteredAppointments" :key="appointment.id">
           <td>{{ appointment.time }}</td>
           <td>{{ appointment.client }}</td>
           <td>{{ appointment.car }}</td>
           <td>{{ appointment.service }}</td>
-          <td>{{ appointment.status }}</td>
+          <td>{{ $t(appointment.statusKey) }}</td>
         </tr>
       </tbody>
     </table>
@@ -51,17 +55,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { supabase } from '@/services/supabase'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const appointments = ref([])
+const searchQuery = ref('')
 const showForm = ref(false)
 const newAppointment = ref({
   time: '',
   client: '',
   car: '',
   service: '',
-  status: 'Ожидает'
+  statusKey: 'waiting'
 })
 
 const fetchAppointments = async () => {
@@ -69,19 +77,20 @@ const fetchAppointments = async () => {
   appointments.value = data || []
 }
 
+const filteredAppointments = computed(() => {
+  return appointments.value.filter(appointment =>
+    appointment.client.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    (appointment.car && appointment.car.includes(searchQuery.value))
+  )
+})
+
 const saveAppointment = async () => {
   const { error } = await supabase.from('appointments').insert([newAppointment.value])
   if (error) {
     alert('Ошибка: ' + error.message)
   } else {
-    // Логирование
-    await supabase.from('logs').insert([{
-      action: 'Добавлена запись',
-      user_email: 'admin@auto.lv',
-      details: newAppointment.value.client
-    }])
     alert('Запись добавлена!')
-    newAppointment.value = { time: '', client: '', car: '', service: '', status: 'Ожидает' }
+    newAppointment.value = { time: '', client: '', car: '', service: '', statusKey: 'waiting' }
     showForm.value = false
     fetchAppointments()
   }
@@ -124,6 +133,14 @@ onMounted(fetchAppointments)
 .form-row input {
   flex: 1;
   padding: 8px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
 }
 
 .appointments-table {
