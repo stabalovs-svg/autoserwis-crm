@@ -90,15 +90,64 @@ const getTranslatedStatus = (status) => {
 }
 
 const saveClient = async () => {
-  const { error } = await supabase.from('clients').insert([newClient.value])
-  if (error) {
-    alert('Ошибка: ' + error.message)
-  } else {
-    alert('Клиент добавлен!')
-    newClient.value = { name: '', phone: '', email: '', car_model: '', car_plate: '', status: 'Оформление' }
-    showAddForm.value = false
-    fetchClients()
+  const clientToSave = {
+    name: newClient.value.name,
+    phone: newClient.value.phone,
+    email: newClient.value.email,
+    car_model: newClient.value.car_model,
+    car_plate: newClient.value.car_plate,
+    status: newClient.value.status
   }
+
+  const { error } = await supabase
+    .from('clients')
+    .insert([clientToSave])
+
+  if (error) {
+    console.error(
+      'Ошибка сохранения клиента:',
+      error
+    )
+
+    alert('Ошибка: ' + error.message)
+    return
+  }
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  const { error: logError } = await supabase
+    .from('logs')
+    .insert([
+      {
+        action: 'Добавлен клиент',
+        user_email: user?.email || '',
+        details: newClient.value.name
+      }
+    ])
+
+  if (logError) {
+    console.error(
+      'Ошибка записи клиента в журнал:',
+      logError
+    )
+  }
+
+  alert('Клиент добавлен!')
+
+  newClient.value = {
+    name: '',
+    phone: '',
+    email: '',
+    car_model: '',
+    car_plate: '',
+    status: 'Оформление'
+  }
+
+  showAddForm.value = false
+
+  await fetchClients()
 }
 
 onMounted(fetchClients)
