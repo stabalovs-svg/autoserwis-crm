@@ -30,11 +30,11 @@
     <table class="appointments-table">
       <thead>
         <tr>
-          <th>Время</th>
-          <th>Клиент</th>
-          <th>Автомобиль</th>
-          <th>Услуга</th>
-          <th>Статус</th>
+          <th>{{ $t('time') }}</th>
+          <th>{{ $t('client') }}</th>
+          <th>{{ $t('car') }}</th>
+          <th>{{ $t('service') }}</th>
+          <th>{{ $t('status') }}</th>
         </tr>
       </thead>
       <tbody>
