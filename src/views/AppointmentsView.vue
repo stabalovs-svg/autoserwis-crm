@@ -54,12 +54,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '@/services/supabase'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 const appointments = ref([])
 const showForm = ref(false)
+
 const newAppointment = ref({
   time: '',
   client: '',
@@ -69,25 +67,55 @@ const newAppointment = ref({
 })
 
 const fetchAppointments = async () => {
-  const { data } = await supabase.from('appointments').select('*')
+  const { data, error } = await supabase
+    .from('appointments')
+    .select('*')
+
+  if (error) {
+    console.error('Ошибка загрузки записей:', error)
+    appointments.value = []
+    return
+  }
+
   appointments.value = data || []
 }
 
 const saveAppointment = async () => {
-  const { error } = await supabase.from('appointments').insert([newAppointment.value])
-  if (error) {
-    alert('Ошибка: ' + error.message)
-  } else {
-    alert('Запись добавлена!')
-    newAppointment.value = { time: '', client: '', car: '', service: '', statusKey: 'waiting' }
-    showForm.value = false
-    fetchAppointments()
+  const appointmentToSave = {
+    time: newAppointment.value.time,
+    client: newAppointment.value.client,
+    car: newAppointment.value.car,
+    service: newAppointment.value.service,
+    status_key: newAppointment.value.statusKey
   }
+
+  const { error } = await supabase
+    .from('appointments')
+    .insert([appointmentToSave])
+
+  if (error) {
+    console.error('Ошибка сохранения записи:', error)
+    alert('Ошибка: ' + error.message)
+    return
+  }
+
+  alert('Запись добавлена!')
+
+  newAppointment.value = {
+    time: '',
+    client: '',
+    car: '',
+    service: '',
+    statusKey: 'waiting'
+  }
+
+  showForm.value = false
+
+  await fetchAppointments()
 }
 
 onMounted(fetchAppointments)
 </script>
-
 <style scoped>
 .page-header {
   display: flex;
