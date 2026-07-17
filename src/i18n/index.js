@@ -53,7 +53,11 @@ const messages = {
     quantity: 'Количество',
     buyPrice: 'Цена закупки',
     sellPrice: 'Цена продажи',
-    logs: 'Журнал',
+    logs: 'Журнал изменений',
+    date: 'Дата',
+    action: 'Действие',
+    user: 'Пользователь',
+    details: 'Детали',
   },
   en: {
     dashboard: 'Dashboard',
@@ -107,7 +111,11 @@ const messages = {
     quantity: 'Quantity',
     buyPrice: 'Purchase Price',
     sellPrice: 'Selling Price',
-    logs: 'Log',
+    logs: 'Change Log',
+    date: 'Date',
+    action: 'Action',
+    user: 'User',
+    details: 'Spare Parts',
   },
   bg: {
     dashboard: 'Табло за управление',
@@ -162,6 +170,10 @@ const messages = {
     buyPrice: 'Покупна цена',
     sellPrice: 'Продажна цена',
     logs: 'Дневник',
+    date: 'Дата',
+    action: 'Действие',
+    user: 'Потребител',
+    details: 'Резервни части',
   },
   lv: {
     dashboard: 'Vadības panelis',
@@ -216,6 +228,10 @@ const messages = {
     buyPrice: 'Pirkuma cena',
     sellPrice: 'Pārdošanas cena',
     logs: 'Izmaiņu žurnāls',
+    date: 'Datums',
+    action: 'Darbība',
+    user: 'Lietotājs',
+    details: 'Rezerves daļas',
   },
 }
 

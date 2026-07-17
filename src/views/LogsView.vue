@@ -1,13 +1,13 @@
 <template>
     <div>
-        <h1>Журнал изменений</h1>
+        <h1>{{ $t('logs') }}</h1>
         <table class="logs-table">
             <thead>
                 <tr>
-                    <th>Дата</th>
-                    <th>Действие</th>
-                    <th>Пользователь</th>
-                    <th>Детали</th>
+                    <th>{{ $t('date') }}</th>
+                    <th>{{ $t('action') }}</th>
+                    <th>{{ $t('user') }}</th>
+                    <th>{{ $t('details') }}</th>
                 </tr>
             </thead>
             <tbody>
