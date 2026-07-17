@@ -2,15 +2,11 @@
   <div>
     <div class="page-header">
       <h1>{{ $t('appointments') }}</h1>
-      <button @click="showForm = !showForm" class="add-btn">
-        {{ showForm ? $t('hide') : $t('newAppointment') }}
-      </button>
+      <button @click="showForm = !showForm" class="add-btn">{{ $t('newAppointment') }}</button>
     </div>
 
-    <!-- Поиск -->
     <input v-model="searchQuery" :placeholder="$t('search')" class="search-input">
 
-    <!-- Форма -->
     <div v-if="showForm" class="add-form">
       <h3>{{ $t('newAppointment') }}</h3>
       <form @submit.prevent="saveAppointment">
@@ -22,15 +18,14 @@
           <input v-model="newAppointment.car" :placeholder="$t('car')">
           <input v-model="newAppointment.service" :placeholder="$t('service')">
         </div>
-        <select v-model="newAppointment.status">
-          <option value="Ожидает">{{ $t('waiting') }}</option>
-          <option value="В работе">{{ $t('inWork') }}</option>
+        <select v-model="newAppointment.statusKey">
+          <option value="waiting">{{ $t('waiting') }}</option>
+          <option value="inWork">{{ $t('inWork') }}</option>
         </select>
         <button type="submit">{{ $t('save') }}</button>
       </form>
     </div>
 
-    <!-- Таблица -->
     <table class="appointments-table" v-if="appointments.length">
       <thead>
         <tr>
@@ -46,7 +41,7 @@
           <td>{{ appointment.time }}</td>
           <td>{{ appointment.client }}</td>
           <td>{{ appointment.car }}</td>
-          <td>{{ appointment.service }}</td>
+          <td>{{ $t(appointment.service) }}</td>
           <td>{{ $t(appointment.statusKey) }}</td>
         </tr>
       </tbody>
@@ -68,7 +63,7 @@ const newAppointment = ref({
   time: '',
   client: '',
   car: '',
-  service: '',
+  service: 'oilChange',
   statusKey: 'waiting'
 })
 
@@ -90,7 +85,7 @@ const saveAppointment = async () => {
     alert('Ошибка: ' + error.message)
   } else {
     alert('Запись добавлена!')
-    newAppointment.value = { time: '', client: '', car: '', service: '', statusKey: 'waiting' }
+    newAppointment.value = { time: '', client: '', car: '', service: 'oilChange', statusKey: 'waiting' }
     showForm.value = false
     fetchAppointments()
   }
