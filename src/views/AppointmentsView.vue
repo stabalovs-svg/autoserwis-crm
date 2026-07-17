@@ -5,8 +5,6 @@
       <button @click="showForm = !showForm" class="add-btn">{{ $t('newAppointment') }}</button>
     </div>
 
-    <input v-model="searchQuery" :placeholder="$t('search')" class="search-input">
-
     <div v-if="showForm" class="add-form">
       <h3>{{ $t('newAppointment') }}</h3>
       <form @submit.prevent="saveAppointment">
@@ -26,7 +24,7 @@
       </form>
     </div>
 
-    <table class="appointments-table" v-if="appointments.length">
+    <table class="appointments-table">
       <thead>
         <tr>
           <th>{{ $t('time') }}</th>
@@ -37,7 +35,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="appointment in filteredAppointments" :key="appointment.id">
+        <tr v-for="appointment in appointments" :key="appointment.id">
           <td>{{ appointment.time }}</td>
           <td>{{ appointment.client }}</td>
           <td>{{ appointment.car }}</td>
@@ -50,14 +48,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '@/services/supabase'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
 const appointments = ref([])
-const searchQuery = ref('')
 const showForm = ref(false)
 const newAppointment = ref({
   time: '',
@@ -71,13 +68,6 @@ const fetchAppointments = async () => {
   const { data } = await supabase.from('appointments').select('*')
   appointments.value = data || []
 }
-
-const filteredAppointments = computed(() => {
-  return appointments.value.filter(appointment =>
-    appointment.client.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    (appointment.car && appointment.car.includes(searchQuery.value))
-  )
-})
 
 const saveAppointment = async () => {
   const { error } = await supabase.from('appointments').insert([newAppointment.value])
