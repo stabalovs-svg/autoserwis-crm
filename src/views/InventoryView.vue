@@ -61,8 +61,8 @@ const newPart = ref({
   name: '',
   article: '',
   quantity: '',
-  buy_price: 0,
-  sell_price: 0
+  buy_price: '',
+  sell_price: '',
 })
 
 const fetchParts = async () => {
