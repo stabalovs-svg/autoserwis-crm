@@ -12,6 +12,7 @@
       <h3>{{ $t('newAppointment') }}</h3>
       <form @submit.prevent="saveAppointment">
         <div class="form-row">
+          <input v-model="newAppointment.date" type="date" required>
           <input v-model="newAppointment.time" type="time" required>
           <input v-model="newAppointment.client" :placeholder="$t('client')" required>
         </div>
@@ -61,6 +62,7 @@ const appointments = ref([])
 const showForm = ref(false)
 
 const newAppointment = ref({
+  date: '',
   time: '',
   client: '',
   car: '',
@@ -93,6 +95,7 @@ const fetchAppointments = async () => {
 
 const saveAppointment = async () => {
   const appointmentToSave = {
+    date: newAppointment.value.date,
     time: newAppointment.value.time,
     client: newAppointment.value.client,
     car: newAppointment.value.car,
@@ -113,6 +116,7 @@ const saveAppointment = async () => {
   alert('Запись добавлена!')
 
   newAppointment.value = {
+    date: '',
     time: '',
     client: '',
     car: '',
