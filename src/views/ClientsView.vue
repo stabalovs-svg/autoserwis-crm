@@ -9,10 +9,25 @@
 
     <input v-model="searchQuery" :placeholder="$t('search')" class="search-input">
 
+    <!-- Форма -->
     <div v-if="showAddForm" class="add-form">
-      <!-- форма как раньше -->
+      <h3>{{ $t('newClient') }}</h3>
+      <form @submit.prevent="saveClient">
+        <input v-model="newClient.name" :placeholder="$t('fullName')" required>
+        <input v-model="newClient.phone" :placeholder="$t('phone')">
+        <input v-model="newClient.email" :placeholder="$t('email')" type="email">
+        <input v-model="newClient.car_model" :placeholder="$t('carModel')">
+        <input v-model="newClient.car_plate" :placeholder="$t('carPlate')">
+        <select v-model="newClient.status">
+          <option value="Оформление">{{ $t('оформление') }}</option>
+          <option value="В ремонте">{{ $t('inRepair') }}</option>
+          <option value="Ожидает">{{ $t('waiting') }}</option>
+        </select>
+        <button type="submit">{{ $t('save') }}</button>
+      </form>
     </div>
 
+    <!-- Таблица -->
     <table class="clients-table" v-if="clients.length">
       <thead>
         <tr>
@@ -90,15 +105,6 @@ onMounted(fetchClients)
 </script>
 
 <style scoped>
-/* Стили + search */
-.search-input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-}
-
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -145,5 +151,13 @@ onMounted(fetchClients)
 
 .clients-table th {
   background: #f1f5f9;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
 }
 </style>
