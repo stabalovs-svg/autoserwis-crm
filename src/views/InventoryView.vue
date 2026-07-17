@@ -60,7 +60,7 @@ const showForm = ref(false)
 const newPart = ref({
   name: '',
   article: '',
-  quantity: 0,
+  quantity: '',
   buy_price: 0,
   sell_price: 0
 })
@@ -91,7 +91,6 @@ const savePart = async () => {
 
 onMounted(fetchParts)
 </script>
-
 <style scoped>
 .page-header {
   display: flex;
