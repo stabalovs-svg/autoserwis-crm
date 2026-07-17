@@ -45,13 +45,7 @@
           <td>{{ appointment.car }}</td>
           <td>{{ appointment.service }}</td>
           <td>
-            {{
-              appointment.status_key === 'inWork' ||
-                appointment.status_key === 'in_work' ||
-                appointment.statusKey === 'inWork'
-                ? $t('inWork')
-                : $t('waiting')
-            }}
+            {{ $t(appointment.status || appointment.status_key || appointment.statusKey || 'waiting') }}
           </td>
         </tr>
       </tbody>
@@ -103,7 +97,7 @@ const saveAppointment = async () => {
     client: newAppointment.value.client,
     car: newAppointment.value.car,
     service: newAppointment.value.service,
-    status_key: newAppointment.value.statusKey
+    status: newAppointment.value.statusKey
   }
 
   const { error } = await supabase
