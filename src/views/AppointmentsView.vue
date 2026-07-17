@@ -8,30 +8,26 @@
     <div v-if="showForm" class="add-form">
       <h3>{{ $t('newAppointment') }}</h3>
       <form @submit.prevent="saveAppointment">
-        <div class="form-row">
-          <input v-model="newAppointment.time" type="time" required>
-          <input v-model="newAppointment.client" :placeholder="$t('client')" required>
-        </div>
-        <div class="form-row">
-          <input v-model="newAppointment.car" :placeholder="$t('car')">
-          <input v-model="newAppointment.service" :placeholder="$t('service')">
-        </div>
+        <input v-model="newAppointment.time" type="time" required>
+        <input v-model="newAppointment.client" placeholder="Клиент" required>
+        <input v-model="newAppointment.car" placeholder="Автомобиль">
+        <input v-model="newAppointment.service" placeholder="Услуга">
         <select v-model="newAppointment.statusKey">
-          <option value="waiting">{{ $t('waiting') }}</option>
-          <option value="inWork">{{ $t('inWork') }}</option>
+          <option value="waiting">Ожидает</option>
+          <option value="inWork">В работе</option>
         </select>
-        <button type="submit">{{ $t('save') }}</button>
+        <button type="submit">Сохранить запись</button>
       </form>
     </div>
 
     <table class="appointments-table">
       <thead>
         <tr>
-          <th>{{ $t('time') }}</th>
-          <th>{{ $t('client') }}</th>
-          <th>{{ $t('car') }}</th>
-          <th>{{ $t('service') }}</th>
-          <th>{{ $t('status') }}</th>
+          <th>Время</th>
+          <th>Клиент</th>
+          <th>Автомобиль</th>
+          <th>Услуга</th>
+          <th>Статус</th>
         </tr>
       </thead>
       <tbody>
@@ -39,8 +35,8 @@
           <td>{{ appointment.time }}</td>
           <td>{{ appointment.client }}</td>
           <td>{{ appointment.car }}</td>
-          <td>{{ $t(appointment.service) }}</td>
-          <td>{{ $t(appointment.statusKey) }}</td>
+          <td>{{ appointment.service }}</td>
+          <td>{{ appointment.status }}</td>
         </tr>
       </tbody>
     </table>
@@ -50,9 +46,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '@/services/supabase'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 const appointments = ref([])
 const showForm = ref(false)
@@ -60,8 +53,8 @@ const newAppointment = ref({
   time: '',
   client: '',
   car: '',
-  service: 'oilChange',
-  statusKey: 'waiting'
+  service: '',
+  status: 'Ожидает'
 })
 
 const fetchAppointments = async () => {
@@ -75,7 +68,7 @@ const saveAppointment = async () => {
     alert('Ошибка: ' + error.message)
   } else {
     alert('Запись добавлена!')
-    newAppointment.value = { time: '', client: '', car: '', service: 'oilChange', statusKey: 'waiting' }
+    newAppointment.value = { time: '', client: '', car: '', service: '', status: 'Ожидает' }
     showForm.value = false
     fetchAppointments()
   }
