@@ -3,7 +3,10 @@ import { computed, ref } from 'vue'
 import logo from './assets/logo/ikars-logo.svg'
 import { clients, initialOrders, inventory } from './demo-data'
 
-const lang = ref('lv')
+const q = new URLSearchParams(window.location.search)
+const savedLang = localStorage.getItem('autoserwis-lang')
+const initialLang = ['en', 'lv', 'ru'].includes(q.get('lang')) ? q.get('lang') : (['en', 'lv', 'ru'].includes(savedLang) ? savedLang : 'lv')
+const lang = ref(initialLang)
 const section = ref('dashboard')
 const orders = ref(structuredClone(initialOrders))
 const selected = ref(null)
@@ -131,6 +134,7 @@ const resetDemo = () => {
         </button>
       </nav>
       <a class="learn" href="https://ikars.lv/#contact">{{ t('contact') }} →</a>
+      <a class="back-home" href="https://ikars.lv/">← ikars.lv</a>
     </aside>
 
     <main>
@@ -138,7 +142,7 @@ const resetDemo = () => {
         <div><strong>IKARS Auto Service</strong><small>Rīga · Demo autoserviss</small></div>
         <div class="top-actions"><button v-for="code in ['lv','ru','en']" :key="code" :class="{active:lang===code}" @click="lang=code">{{ code.toUpperCase() }}</button></div>
       </header>
-      <div class="demo-banner"><strong>{{ t('demo') }}</strong><span>{{ t('demoNote') }}</span><button @click="resetDemo">↻ {{ t('reset') }}</button></div>
+      <div class="demo-banner"><strong>{{ t('demo') }}</strong><span>{{ t('demoNote') }}</span><a class="back-home" href="https://ikars.lv/">← ikars.lv</a><button @click="resetDemo">↻ {{ t('reset') }}</button></div>
 
       <section class="page">
         <template v-if="section === 'dashboard'">
