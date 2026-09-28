@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { formatMileage, searchVehicles } from '../lib/vehicles'
+import PlateScanner from './PlateScanner.vue'
 
 const props = defineProps({
   vehicles: { type: Array, default: () => [] },
@@ -31,6 +32,8 @@ const isVinSearch = computed(() => /^[A-HJ-NPR-Z0-9]{17}$/i.test(query.value.tri
     </div>
 
     <p class="vehicles-hint">{{ isVinSearch ? t('vehiclesVinFound') : t('vehiclesHint') }}</p>
+
+    <PlateScanner :vehicles="vehicles" :t="t" @open="emit('open', $event)" @new-order="emit('new-order', $event)" />
 
     <p v-if="!found.length" class="vehicles-empty">{{ query ? t('vehiclesNothing') : t('vehiclesEmpty') }}</p>
 

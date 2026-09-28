@@ -71,5 +71,30 @@
 .lightbox img{width:100%;max-height:82vh;object-fit:contain;border-radius:14px;background:#000}
 .lightbox figcaption{margin-top:10px;color:#fff;font-size:13px;text-align:center}
 .lightbox .x{position:absolute;top:-14px;right:-14px;background:#fff}
+.scanner{margin:0 0 22px;padding:18px 20px;border:1px solid #cfe6e2;border-radius:16px;background:linear-gradient(#f3fbfa,#fff);box-shadow:0 10px 26px #0f77740d}
+.scanner-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.scanner-head h2{margin:0;font-size:18px}
+.scanner-engine{padding:6px 10px;border:1px solid #cfe0dd;border-radius:20px;background:#fff;color:#0f7774;font-size:11px;font-weight:800}
+.scanner-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.file-button{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:8px}
+.file-button input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.scanner-hint{color:#5e7472;font-size:12px}
+.scanner-busy{display:grid;gap:6px;margin-top:14px}
+.scanner-bar{display:block;height:8px;border-radius:99px;background:#e2eeec;overflow:hidden}
+.scanner-bar i{display:block;height:100%;background:linear-gradient(90deg,#7bd1c5,#0b8179);transition:width .25s}
+.scanner-busy small{color:#5e7472;font-size:12px}
+.scanner-error{margin:14px 0 0;color:#a34a31;font-size:13px;font-weight:700}
+.scanner-result{display:grid;grid-template-columns:180px 1fr;gap:16px;margin-top:16px;padding:14px;border:1px solid #dbe8e6;border-radius:14px;background:#fff}
+.scanner-result img{width:100%;height:140px;object-fit:cover;border-radius:10px;background:#eef4f3}
+.scanner-fields{display:grid;gap:10px}
+.scanner-input input{width:100%;padding:12px 14px;border:1px solid #cbdedb;border-radius:10px;font:inherit;font-weight:800;letter-spacing:.05em}
+.scanner-candidates{display:flex;gap:6px;flex-wrap:wrap}
+.scanner-candidates button{padding:6px 10px;border:1px solid #cfe0dd;border-radius:8px;background:#f7fbfa;color:#41605e;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.scanner-found,.scanner-new{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid #cfe6e2;border-radius:12px;background:#f3faf9}
+.scanner-found strong{display:block;font-size:15px}
+.scanner-found span{color:#5e7472;font-size:12px}
+.scanner-new span{color:#5e7472;font-size:13px;font-weight:700}
+@media (max-width:760px){.scanner-result{grid-template-columns:1fr}.scanner-result img{height:180px}}
+
 
 
