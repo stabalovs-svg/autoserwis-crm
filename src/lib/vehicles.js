@@ -79,9 +79,9 @@ export function searchVehicles(vehicles, query) {
       .some((value) => String(value || '').toUpperCase().includes(needle)))
 }
 
-export function formatMileage(value) {
+export function formatMileage(value, locale = 'lv-LV') {
   if (value === null || value === undefined || value === '') return '—'
-  return `${Number(value).toLocaleString('lv-LV')} km`
+  return `${Number(value).toLocaleString(locale)} km`
 }
 
 // Free VIN decoder (NHTSA vPIC). Returns null when the VIN is unknown or offline.

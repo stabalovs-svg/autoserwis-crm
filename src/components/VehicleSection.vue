@@ -5,6 +5,7 @@ import { formatMileage, searchVehicles } from '../lib/vehicles'
 const props = defineProps({
   vehicles: { type: Array, default: () => [] },
   t: { type: Function, required: true },
+  locale: { type: String, default: 'lv-LV' },
   statusText: { type: Object, default: () => ({}) },
   photosCount: { type: Function, default: () => 0 },
 })
@@ -46,7 +47,7 @@ const isVinSearch = computed(() => /^[A-HJ-NPR-Z0-9]{17}$/i.test(query.value.tri
 
         <dl>
           <div><dt>{{ t('visits') }}</dt><dd>{{ vehicle.visits.length }}</dd></div>
-          <div><dt>{{ t('mileage') }}</dt><dd>{{ formatMileage(vehicle.mileage) }}</dd></div>
+          <div><dt>{{ t('mileage') }}</dt><dd>{{ formatMileage(vehicle.mileage, locale) }}</dd></div>
           <div><dt>{{ t('spentAll') }}</dt><dd>€{{ vehicle.total }}</dd></div>
           <div><dt>{{ t('photos') }}</dt><dd>{{ photosCount(vehicle) }}</dd></div>
         </dl>

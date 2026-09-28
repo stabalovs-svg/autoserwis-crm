@@ -6,6 +6,7 @@ import { formatMileage, isValidVin } from '../lib/vehicles'
 const props = defineProps({
   vehicle: { type: Object, required: true },
   t: { type: Function, required: true },
+  locale: { type: String, default: 'lv-LV' },
   statusText: { type: Object, default: () => ({}) },
   photos: { type: Array, default: () => [] },
   busy: { type: Boolean, default: false },
@@ -43,8 +44,8 @@ const openVisit = computed(() => props.vehicle.visits.find((visit) => visit.stat
       </div>
       <div>
         <span>{{ t('mileage') }}</span>
-        <strong>{{ formatMileage(vehicle.mileage) }}</strong>
-        <small v-if="vehicle.mileageDelta">+{{ vehicle.mileageDelta.toLocaleString('lv-LV') }} km {{ t('sinceLastVisit') }}</small>
+        <strong>{{ formatMileage(vehicle.mileage, locale) }}</strong>
+        <small v-if="vehicle.mileageDelta">+{{ vehicle.mileageDelta.toLocaleString(locale) }} km {{ t('sinceLastVisit') }}</small>
       </div>
       <div><span>{{ t('visits') }}</span><strong>{{ vehicle.visits.length }}</strong></div>
       <div>
@@ -87,7 +88,7 @@ const openVisit = computed(() => props.vehicle.visits.find((visit) => visit.stat
         <time>{{ visit.date }}<small>{{ visit.time }}</small></time>
         <span>
           <strong>{{ visit.service }}</strong>
-          <small>{{ visit.id }} · {{ visit.master }}<template v-if="visit.mileage"> · {{ visit.mileage.toLocaleString('lv-LV') }} km</template></small>
+          <small>{{ visit.id }} · {{ visit.master }}<template v-if="visit.mileage"> · {{ visit.mileage.toLocaleString(locale) }} km</template></small>
         </span>
         <em :class="['status', visit.status]">{{ statusText[visit.status] }}</em>
         <b>€{{ visit.labor + visit.parts }}</b>
