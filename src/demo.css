@@ -9,3 +9,67 @@
 .demo-banner .back-home{padding:6px 11px;border-color:#e0bd6a;color:#73571a;background:#fff}
 .demo-banner .back-home:hover{border-color:#c9a250;color:#5a4413}
 
+/* --- cars, history and photos --- */
+.vehicles-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.vehicles-head h1{margin:6px 0 0;font-size:28px}
+.vehicles-search{display:flex;align-items:center;gap:10px;min-width:320px;padding:10px 14px;border:1px solid #cfe0dd;border-radius:12px;background:#fff}
+.vehicles-search span{color:#0f7774;font-weight:800}
+.vehicles-search input{border:0;outline:0;font:inherit;width:100%;background:transparent}
+.vehicles-hint{margin:10px 0 22px;color:#5e7472;font-size:13px}
+.vehicles-empty{padding:26px;border:1px dashed #cfe0dd;border-radius:14px;background:#fff;color:#5e7472;text-align:center}
+.vehicle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.vehicle-card{padding:20px;border:1px solid #dbe8e6;border-radius:16px;background:#fff;box-shadow:0 10px 26px #0f77740d;display:flex;flex-direction:column;gap:8px}
+.vehicle-card header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vehicle-card h2{margin:0;font-size:19px}
+.vehicle-card .vin{margin:0;color:#0f7774;font-size:12px;font-weight:700;letter-spacing:.04em}
+.vehicle-card .client{margin:0;color:#5e7472;font-size:13px}
+.vehicle-card dl{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 0}
+.vehicle-card dt{color:#7b8f8d;font-size:11px}
+.vehicle-card dd{margin:2px 0 0;font-weight:800}
+.vehicle-card footer{margin-top:auto;padding-top:14px;border-top:1px solid #eef4f3;display:grid;gap:10px}
+.vehicle-card footer small{color:#7b8f8d}
+.vehicle-actions{display:flex;gap:8px;flex-wrap:wrap}
+.vehicle-actions button{flex:1;min-width:130px}
+.open-badge{padding:4px 10px;border-radius:20px;background:#fff3d6;color:#8a6a12;font-size:11px;font-style:normal;font-weight:800}
+.plate{display:inline-flex;padding:4px 10px;border:2px solid #173b39;border-radius:6px;font-weight:800;letter-spacing:.06em;font-size:13px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.warn{color:#c0562f!important}
+.link{border:0;background:transparent;color:#0f7774;font:inherit;font-size:12px;font-weight:800;cursor:pointer;padding:6px 0;text-align:left}
+.vin-decoded{display:grid;gap:4px;margin:14px 0 0;padding:12px 14px;border:1px solid #cfe0dd;border-radius:12px;background:#f3faf9;font-size:13px}
+.vin-decoded span{color:#5e7472;font-size:12px}
+.vehicle-heading{display:flex;align-items:center;gap:14px;margin:10px 0 18px}
+.vehicle-heading h2{margin:0;font-size:22px}
+.vehicle-heading small{color:#5e7472}
+.order-vehicle{margin-top:16px}
+.history-row{display:grid;grid-template-columns:88px 1fr auto auto;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid #e6efee;border-radius:12px;background:#fff;text-align:left;cursor:pointer}
+.history-row:hover{border-color:#0f7774}
+.history-row time{display:grid;font-weight:800;font-size:12px}
+.history-row time small,.history-row span small{color:#7b8f8d;font-weight:600;font-size:11px}
+.history-row span strong{display:block}
+.history-row b{font-size:13px}
+.drawer .history{display:grid;gap:8px;margin-top:18px}
+.drawer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.drawer-actions>*{flex:1;min-width:140px}
+.photo-block{display:grid;gap:12px}
+.photo-tags{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:6px 12px;border:1px solid #cfe0dd;border-radius:20px;background:#fff;font:inherit;font-size:12px;font-weight:700;color:#41605e;cursor:pointer}
+.chip.active{border-color:#0f7774;background:#0f7774;color:#fff}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.photo-card{position:relative;margin:0;border:1px solid #e6efee;border-radius:12px;overflow:hidden;background:#fff}
+.photo-frame{display:block;width:100%;padding:0;border:0;background:#eef4f3;cursor:zoom-in}
+.photo-frame img{display:block;width:100%;height:110px;object-fit:cover}
+.photo-card figcaption{display:flex;justify-content:space-between;gap:6px;padding:7px 9px;font-size:10px;color:#5e7472}
+.photo-card figcaption em{font-style:normal;color:#8fa2a0}
+.photo-remove{position:absolute;top:6px;right:6px;width:26px;height:26px;border:0;border-radius:50%;background:#000000a6;color:#fff;font-size:15px;line-height:1;cursor:pointer}
+.photo-add{display:grid;place-items:center;gap:6px;min-height:140px;padding:14px;border:1px dashed #b9d3d0;border-radius:12px;background:#f7fbfa;color:#0f7774;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.photo-add b{font-size:22px}
+.photo-add:disabled{opacity:.6;cursor:progress}
+.photo-input{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.photos h3{margin:0 0 10px;font-size:15px}
+.order-photos{margin-top:18px}
+.lightbox figure{position:relative;margin:0;max-width:min(920px,92vw)}
+.lightbox img{width:100%;max-height:82vh;object-fit:contain;border-radius:14px;background:#000}
+.lightbox figcaption{margin-top:10px;color:#fff;font-size:13px;text-align:center}
+.lightbox .x{position:absolute;top:-14px;right:-14px;background:#fff}
+
+

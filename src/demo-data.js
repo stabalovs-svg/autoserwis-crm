@@ -1,15 +1,24 @@
 export const initialOrders = [
-  { id: 'WO-1048', date: '30.08.2026', time: '09:00', client: 'Mārtiņš Ozols', phone: '+371 2000 1842', car: 'Volvo XC60', plate: 'MO-1842', service: 'Bremžu diagnostika', master: 'Jānis', status: 'work', labor: 85, parts: 124, paid: false },
-  { id: 'WO-1047', date: '30.08.2026', time: '10:30', client: 'Анна Крузите', phone: '+371 2540 4040', car: 'Toyota Auris', plate: 'AK-7788', service: 'Eļļas un filtru maiņa', master: 'Aleksandrs', status: 'ready', labor: 45, parts: 68, paid: false },
-  { id: 'WO-1046', date: '30.08.2026', time: '12:00', client: 'Ivars Kalniņš', phone: '+371 2911 5200', car: 'VW Passat', plate: 'IK-5200', service: 'Piekare · priekšējā ass', master: 'Jānis', status: 'waiting', labor: 110, parts: 236, paid: false },
-  { id: 'WO-1045', date: '29.08.2026', time: '15:30', client: 'Laura Bērziņa', phone: '+371 2677 1901', car: 'Škoda Octavia', plate: 'LB-1901', service: 'Kondicioniera apkope', master: 'Aleksandrs', status: 'done', labor: 55, parts: 24, paid: true },
+  { id: 'WO-1048', date: '30.08.2026', time: '09:00', client: 'Mārtiņš Ozols', phone: '+371 2000 1842', car: 'Volvo XC60', plate: 'MO-1842', vin: 'YV1DZARC1F1234567', mileage: 214500, service: 'Bremžu diagnostika', master: 'Jānis', status: 'work', labor: 85, parts: 124, paid: false },
+  { id: 'WO-1047', date: '30.08.2026', time: '10:30', client: 'Анна Крузите', phone: '+371 2540 4040', car: 'Toyota Auris', plate: 'AK-7788', vin: 'SB1KD3LE20E123456', mileage: 168900, service: 'Eļļas un filtru maiņa', master: 'Aleksandrs', status: 'ready', labor: 45, parts: 68, paid: false },
+  { id: 'WO-1046', date: '30.08.2026', time: '12:00', client: 'Ivars Kalniņš', phone: '+371 2911 5200', car: 'VW Passat', plate: 'IK-5200', vin: 'WVWZZZ3CZFE123456', mileage: 302100, service: 'Piekare · priekšējā ass', master: 'Jānis', status: 'waiting', labor: 110, parts: 236, paid: false },
+  { id: 'WO-1045', date: '29.08.2026', time: '15:30', client: 'Laura Bērziņa', phone: '+371 2677 1901', car: 'Škoda Octavia', plate: 'LB-1901', vin: 'TMBJF7NE0F0123456', mileage: 121400, service: 'Kondicioniera apkope', master: 'Aleksandrs', status: 'done', labor: 55, parts: 24, paid: true },
+
+  // History of the same cars — so the vehicle card shows a real timeline.
+  { id: 'WO-1041', date: '12.05.2026', time: '09:30', client: 'Mārtiņš Ozols', phone: '+371 2000 1842', car: 'Volvo XC60', plate: 'MO-1842', vin: 'YV1DZARC1F1234567', mileage: 208300, service: 'Eļļas un filtru maiņa', master: 'Aleksandrs', status: 'done', labor: 45, parts: 73, paid: true },
+  { id: 'WO-1033', date: '03.02.2026', time: '14:00', client: 'Mārtiņš Ozols', phone: '+371 2000 1842', car: 'Volvo XC60', plate: 'MO-1842', vin: 'YV1DZARC1F1234567', mileage: 199800, service: 'Riepu montāža · ziemas komplekts', master: 'Jānis', status: 'done', labor: 40, parts: 24, paid: true },
+  { id: 'WO-1039', date: '18.06.2026', time: '11:00', client: 'Анна Крузите', phone: '+371 2540 4040', car: 'Toyota Auris', plate: 'AK-7788', vin: 'SB1KD3LE20E123456', mileage: 164200, service: 'Bremžu kluči · priekšā', master: 'Jānis', status: 'done', labor: 70, parts: 166, paid: true },
+  { id: 'WO-1031', date: '21.03.2026', time: '10:00', client: 'Анна Крузите', phone: '+371 2540 4040', car: 'Toyota Auris', plate: 'AK-7788', vin: 'SB1KD3LE20E123456', mileage: 158000, service: 'Dzinēja diagnostika', master: 'Aleksandrs', status: 'done', labor: 45, parts: 0, paid: true },
+  { id: 'WO-1037', date: '09.04.2026', time: '08:30', client: 'Ivars Kalniņš', phone: '+371 2911 5200', car: 'VW Passat', plate: 'IK-5200', vin: 'WVWZZZ3CZFE123456', mileage: 294700, service: 'Zobsiksnas maiņa', master: 'Jānis', status: 'done', labor: 180, parts: 222, paid: true },
+  { id: 'WO-1029', date: '17.01.2026', time: '13:00', client: 'Ivars Kalniņš', phone: '+371 2911 5200', car: 'VW Passat', plate: 'IK-5200', vin: 'WVWZZZ3CZFE123456', mileage: 288900, service: 'Vispārējā diagnostika', master: 'Aleksandrs', status: 'done', labor: 45, parts: 0, paid: true },
+  { id: 'WO-1043', date: '07.07.2026', time: '16:00', client: 'Laura Bērziņa', phone: '+371 2677 1901', car: 'Škoda Octavia', plate: 'LB-1901', vin: 'TMBJF7NE0F0123456', mileage: 117900, service: 'Eļļas un filtru maiņa', master: 'Aleksandrs', status: 'done', labor: 45, parts: 81, paid: true },
 ]
 
 export const clients = [
-  { name: 'Mārtiņš Ozols', phone: '+371 2000 1842', car: 'Volvo XC60', plate: 'MO-1842', visits: 4, spent: 746, debt: 209, history: ['12.05.2026 · Eļļas maiņa · €118', '03.02.2026 · Riepu montāža · €64'] },
-  { name: 'Анна Крузите', phone: '+371 2540 4040', car: 'Toyota Auris', plate: 'AK-7788', visits: 7, spent: 1284, debt: 113, history: ['18.06.2026 · Bremžu kluči · €236', '21.03.2026 · Diagnostika · €45'] },
-  { name: 'Ivars Kalniņš', phone: '+371 2911 5200', car: 'VW Passat', plate: 'IK-5200', visits: 3, spent: 512, debt: 346, history: ['09.04.2026 · Zobsiksnas maiņa · €402', '17.01.2026 · Diagnostika · €45'] },
-  { name: 'Laura Bērziņa', phone: '+371 2677 1901', car: 'Škoda Octavia', plate: 'LB-1901', visits: 5, spent: 935, debt: 0, history: ['29.08.2026 · Kondicioniera apkope · €79', '07.07.2026 · Eļļas maiņa · €126'] },
+  { name: 'Mārtiņš Ozols', phone: '+371 2000 1842', car: 'Volvo XC60', plate: 'MO-1842', vin: 'YV1DZARC1F1234567', visits: 4, spent: 746, debt: 209, history: ['12.05.2026 · Eļļas maiņa · €118', '03.02.2026 · Riepu montāža · €64'] },
+  { name: 'Анна Крузите', phone: '+371 2540 4040', car: 'Toyota Auris', plate: 'AK-7788', vin: 'SB1KD3LE20E123456', visits: 7, spent: 1284, debt: 113, history: ['18.06.2026 · Bremžu kluči · €236', '21.03.2026 · Diagnostika · €45'] },
+  { name: 'Ivars Kalniņš', phone: '+371 2911 5200', car: 'VW Passat', plate: 'IK-5200', vin: 'WVWZZZ3CZFE123456', visits: 3, spent: 512, debt: 346, history: ['09.04.2026 · Zobsiksnas maiņa · €402', '17.01.2026 · Diagnostika · €45'] },
+  { name: 'Laura Bērziņa', phone: '+371 2677 1901', car: 'Škoda Octavia', plate: 'LB-1901', vin: 'TMBJF7NE0F0123456', visits: 5, spent: 935, debt: 0, history: ['29.08.2026 · Kondicioniera apkope · €79', '07.07.2026 · Eļļas maiņa · €126'] },
 ]
 
 export const inventory = [
