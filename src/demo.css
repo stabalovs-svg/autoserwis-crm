@@ -95,6 +95,12 @@
 .scanner-found span{color:#5e7472;font-size:12px}
 .scanner-new span{color:#5e7472;font-size:13px;font-weight:700}
 @media (max-width:760px){.scanner-result{grid-template-columns:1fr}.scanner-result img{height:180px}}
+.demo-clock{display:flex;align-items:center;gap:6px;padding:4px 8px;border:1px solid #e6cf95;border-radius:10px;background:#fffdf5}
+.demo-clock>span{font-size:11px;font-weight:700;color:#8a6a12}
+.demo-clock>strong{min-width:80px;text-align:center;font-size:12px;font-weight:800;color:#73571a}
+.demo-clock button{border:0;border-radius:7px;background:#f6e7c4;color:#73571a;font:inherit;font-size:11px;font-weight:800;line-height:1.2;padding:3px 6px;cursor:pointer}
+.demo-clock button:hover{background:#efdca9}
+.demo-clock .clock-reset{background:#efe3c8}
 
 
 

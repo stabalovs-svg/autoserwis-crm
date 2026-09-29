@@ -34,6 +34,10 @@ export const dataset = {
   initialOrders,
   clients,
   inventory,
+  // Filled in the next stages: the booking calendar and the per-vehicle maintenance schedule
+  // (ГТП до, Гражданска отговорност до, интервал ТО).
+  bookings: [],
+  maintenance: {},
   masters: ['Николай', 'Стоян'],
   newClient: { name: 'Иван Петров', car: 'Audi A4', plate: 'CA 1234 AB' },
   newPhone: '+359 88 000 0000',

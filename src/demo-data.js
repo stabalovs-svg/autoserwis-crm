@@ -34,6 +34,9 @@ export const dataset = {
   initialOrders,
   clients,
   inventory,
+  // Filled in the next stages: the booking calendar and the per-vehicle maintenance schedule.
+  bookings: [],
+  maintenance: {},
   masters: ['Jānis', 'Aleksandrs'],
   newClient: { name: 'Roberts Liepa', car: 'Audi A4', plate: 'RL-2026' },
   newPhone: '+371 2000 0000',
