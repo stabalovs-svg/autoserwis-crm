@@ -1,9 +1,9 @@
 // Pure helpers for photo recognition: they turn noisy OCR output into a plate or a VIN.
 // No DOM here on purpose, so the logic stays unit-testable outside the browser.
 
-// Bulgarian plates look like CA1234AB, Latvian ones like AB-1234.
-const BG_PLATE = /\b([A-Z]{1,2})[- ]?(\d{4})[- ]?([A-Z]{2})\b/g
-const LV_PLATE = /\b([A-Z]{2})[- ]?(\d{4})\b/g
+// Что OCR реально путает на номерах (и в какую сторону это исправляется).
+const DIGIT_OF = { O: '0', Q: '0', I: '1', L: '1', Z: '2', S: '5', B: '8' }
+const LETTER_OF = { 0: 'O', 1: 'I', 2: 'Z', 5: 'S', 8: 'B' }
 
 export function normalizePlate(value) {
   return String(value || '')
@@ -16,19 +16,103 @@ export function plateKey(value) {
   return normalizePlate(value)
 }
 
+// Приводим прочитанное к маске: L = буква, d = цифра. strict = без подмен символов.
+function toMask(clean, mask) {
+  if (clean.length !== mask.length) return null
+  let out = ''
+  let strict = true
+  for (let index = 0; index < mask.length; index += 1) {
+    const char = clean[index]
+    if (mask[index] === 'L') {
+      if (/[A-Z]/.test(char)) out += char
+      else if (LETTER_OF[char]) { out += LETTER_OF[char]; strict = false }
+      else return null
+    } else if (/[0-9]/.test(char)) out += char
+    else if (DIGIT_OF[char]) { out += DIGIT_OF[char]; strict = false }
+    else return null
+  }
+  return { value: out, strict }
+}
+
+// Болгарские номера: CA 1842 AB (1–2 буквы, 4 цифры, 2 буквы), латвийские: AB-1842.
+const MASKS = [
+  { mask: 'LLddddLL', country: 'BG', format: (value) => `${value.slice(0, 2)} ${value.slice(2, 6)} ${value.slice(6)}` },
+  { mask: 'LddddLL', country: 'BG', format: (value) => `${value[0]} ${value.slice(1, 5)} ${value.slice(5)}` },
+  { mask: 'LLdddd', country: 'LV', format: (value) => `${value.slice(0, 2)}-${value.slice(2)}` },
+  { mask: 'LLLdddd', country: 'LV', format: (value) => `${value.slice(0, 3)}-${value.slice(3)}` },
+]
+
+// Ищем номера в «склеенном» тексте: окно длиной с маску скользит по строке,
+// поэтому лишний символ рядом («CA184248») больше не ломает распознавание.
 export function plateCandidates(raw) {
   const text = String(raw || '')
     .toUpperCase()
-    .replace(/[^A-Z0-9-]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
+    .replace(/[^A-Z0-9]+/g, '')
+  const hits = []
+  MASKS.forEach(({ mask, country, format }) => {
+    for (let start = 0; start + mask.length <= text.length; start += 1) {
+      const shaped = toMask(text.slice(start, start + mask.length), mask)
+      if (!shaped) continue
+      hits.push({
+        value: format(shaped.value),
+        country,
+        start,
+        end: start + mask.length,
+        length: mask.length,
+        strict: shaped.strict,
+      })
+    }
+  })
+  // Сначала совпадения без подмен (они надёжнее), затем более длинные; перекрывающиеся
+  // отбрасываем, чтобы «CA1842AB» не превращался ещё и в «CA-1842».
+  hits.sort((a, b) => Number(b.strict) - Number(a.strict) || b.length - a.length || a.start - b.start)
   const found = []
-  const push = (value, country, digits) => {
-    if (!found.some((item) => item.value === value)) found.push({ value, country, digits })
+  hits.forEach((hit) => {
+    if (found.some((item) => hit.start < item.end && item.start < hit.end)) return
+    if (found.some((item) => item.value === hit.value)) return
+    found.push(hit)
+  })
+  return found.map((hit) => ({ value: hit.value, country: hit.country, strict: hit.strict }))
+}
+
+function distance(a, b) {
+  const left = String(a || '')
+  const right = String(b || '')
+  const cols = right.length + 1
+  let previous = Array.from({ length: cols }, (_, index) => index)
+  for (let row = 1; row <= left.length; row += 1) {
+    const current = [row]
+    for (let col = 1; col < cols; col += 1) {
+      const cost = left[row - 1] === right[col - 1] ? 0 : 1
+      current[col] = Math.min(previous[col] + 1, current[col - 1] + 1, previous[col - 1] + cost)
+    }
+    previous = current
   }
-  for (const match of text.matchAll(BG_PLATE)) push(`${match[1]}${match[2]}${match[3]}`, 'BG', 8)
-  for (const match of text.matchAll(LV_PLATE)) push(`${match[1]}-${match[2]}`, 'LV', 7)
-  return found
+  return previous[cols - 1]
+}
+
+// Самое полезное для мастера: если в базе есть похожий номер, предлагаем именно его.
+export function matchKnownPlate(value, knownPlates = []) {
+  const clean = normalizePlate(value)
+  if (!clean) return null
+  let best = null
+  let tie = false
+  knownPlates.forEach((plate) => {
+    const candidate = normalizePlate(plate)
+    if (!candidate) return
+    const delta = distance(clean, candidate)
+    if (!best || delta < best.distance) {
+      best = { plate, distance: delta, exact: delta === 0 }
+      tie = false
+    } else if (delta === best.distance) {
+      tie = true
+    }
+  })
+  if (!best) return null
+  // При нескольких одинаково похожих номерах лучше промолчать, чем предложить не тот.
+  if (tie && best.distance > 0) return null
+  const allowed = Math.max(1, Math.min(2, Math.round(normalizePlate(best.plate).length / 5)))
+  return best.distance <= allowed ? best : null
 }
 
 const VIN_WEIGHTS = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2]

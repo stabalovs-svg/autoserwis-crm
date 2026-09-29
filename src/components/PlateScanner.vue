@@ -28,6 +28,8 @@ function findVehicle(value) {
 }
 
 const found = computed(() => findVehicle(manual.value))
+// Номера из базы CRM: по ним OCR-опечатки исправляются на правильный номер машины.
+const knownPlates = computed(() => props.vehicles.map((vehicle) => vehicle.plate).filter(Boolean))
 
 onMounted(() => {
   warmUp()
@@ -47,9 +49,11 @@ async function pick(event, next) {
   preview.value = URL.createObjectURL(file)
   try {
     const read = next === 'plate' ? scanPlate : scanVin
-    const output = await read(file, (value) => { progress.value = value })
+    const output = next === 'plate'
+      ? await read(file, (value) => { progress.value = value }, { knownPlates: knownPlates.value })
+      : await read(file, (value) => { progress.value = value })
     result.value = output
-    const sure = output.source === 'barcode' || (output.kind === 'vin' ? vinChecksumOk(output.value) : output.confidence >= 60)
+    const sure = output.source === 'barcode' || output.known || (output.kind === 'vin' ? vinChecksumOk(output.value) : output.confidence >= 60)
     manual.value = sure ? output.value || '' : ''
     if (!output.value) error.value = props.t('scanNothing')
     else if (!sure) error.value = props.t('scanLowConfidence')
@@ -99,6 +103,7 @@ async function createOrder() {
       </label>
       <small class="scanner-hint">{{ t('scanHint') }}</small>
     </div>
+    <small class="scanner-tips">{{ t('scanTips') }}</small>
 
     <div v-if="busy" class="scanner-busy">
       <span class="scanner-bar"><i :style="{ width: Math.max(progress, 4) + '%' }"></i></span>
@@ -115,6 +120,8 @@ async function createOrder() {
           <template v-if="result"> · {{ t('scanConfidence') }} {{ result.confidence }}%</template>
           <template v-if="result && result.source === 'barcode'"> · {{ t('scanBarcode') }}</template>
         </p>
+        <p v-if="result && result.known" class="scanner-known">✓ {{ t('scanKnownBase') }} · {{ result.known }}</p>
+        <p v-if="result && result.raw" class="scanner-raw">{{ t('scanRaw') }}: {{ result.raw }}</p>
         <label class="scanner-input">
           <input v-model="manual" :placeholder="kind === 'vin' ? 'WVWZZZ1JZ…' : 'AB-1234'">
         </label>

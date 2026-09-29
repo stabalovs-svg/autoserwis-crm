@@ -79,6 +79,9 @@
 .file-button{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:8px}
 .file-button input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .scanner-hint{color:#5e7472;font-size:12px}
+.scanner-tips{display:block;margin-top:8px;color:#7b8f8d;font-size:11px;line-height:1.5}
+.scanner-known{margin:0;color:#16715f;font-size:12px;font-weight:800}
+.scanner-raw{margin:0;color:#8fa2a0;font-size:11px;word-break:break-word}
 .scanner-busy{display:grid;gap:6px;margin-top:14px}
 .scanner-bar{display:block;height:8px;border-radius:99px;background:#e2eeec;overflow:hidden}
 .scanner-bar i{display:block;height:100%;background:linear-gradient(90deg,#7bd1c5,#0b8179);transition:width .25s}
