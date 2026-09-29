@@ -27,3 +27,21 @@ export const inventory = [
   { article: 'OL-5W30', name: 'Motoreļļa 5W-30 · 1L', qty: 24, min: 10, buy: 8.2, sell: 14 },
   { article: 'AF-115', name: 'Gaisa filtrs Bosch', qty: 2, min: 3, buy: 11, sell: 19 },
 ]
+
+// Latvian demo set: people, plates, phone numbers and the activity log of a Riga workshop.
+export const dataset = {
+  code: 'lv',
+  initialOrders,
+  clients,
+  inventory,
+  masters: ['Jānis', 'Aleksandrs'],
+  newClient: { name: 'Roberts Liepa', car: 'Audi A4', plate: 'RL-2026' },
+  newPhone: '+371 2000 0000',
+  orderBase: 1048,
+  logs: [
+    { time: '10:18', type: 'status', id: 'WO-1047', status: 'ready' },
+    { time: '09:42', type: 'diagnostic', id: 'WO-1048' },
+    { time: '09:05', type: 'created', id: 'WO-1046' },
+    { time: '08:51', type: 'reserved', id: 'BP-881', quantity: 1 },
+  ],
+}
