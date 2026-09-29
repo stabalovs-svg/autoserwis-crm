@@ -101,6 +101,35 @@
 .demo-clock button{border:0;border-radius:7px;background:#f6e7c4;color:#73571a;font:inherit;font-size:11px;font-weight:800;line-height:1.2;padding:3px 6px;cursor:pointer}
 .demo-clock button:hover{background:#efdca9}
 .demo-clock .clock-reset{background:#efe3c8}
+.due-badge{padding:4px 9px;border-radius:20px;font-size:11px;font-style:normal;font-weight:800;white-space:nowrap}
+.due-badge.overdue{background:#ffe0dc;color:#a32b1e}
+.due-badge.urgent{background:#fff0d6;color:#8a5a12}
+.due-badge.soon{background:#eef6e4;color:#4c6b1f}
+.maintenance{margin:20px 0 0;padding:14px;border:1px solid #dbe8e6;border-radius:14px;background:#fff}
+.maintenance-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.maintenance-head h3{margin:0;font-size:15px}
+.maintenance-empty{margin:10px 0 0;color:#5e7472;font-size:13px}
+.maintenance-rows{display:grid;gap:8px;margin-top:10px}
+.maintenance-row{display:grid;grid-template-columns:1fr auto;gap:4px 10px;margin:0;padding:10px 12px;border:1px solid #eef4f3;border-left:4px solid #cfe0dd;border-radius:10px;background:#fbfdfd}
+.maintenance-row span{font-size:12px;color:#5e7472}
+.maintenance-row strong{font-size:14px;text-align:right}
+.maintenance-row em{grid-column:2;justify-self:end;padding:2px 8px;border-radius:20px;background:#eef4f3;color:#5e7472;font-size:10px;font-style:normal;font-weight:800}
+.maintenance-row small{grid-column:1/-1;color:#7b8f8d;font-size:11px}
+.maintenance-row.overdue{border-left-color:#c0562f;background:#fff7f5}
+.maintenance-row.overdue em{background:#ffe0dc;color:#a32b1e}
+.maintenance-row.urgent{border-left-color:#e0a33a;background:#fffdf6}
+.maintenance-row.urgent em{background:#fff0d6;color:#8a5a12}
+.maintenance-row.soon{border-left-color:#9dc06a}
+.maintenance-row.soon em{background:#eef6e4;color:#4c6b1f}
+.maintenance-row.ok{border-left-color:#7bd1c5}
+.maintenance-row.ok em{background:#dff3ec;color:#16715f}
+.maintenance-next{margin:2px 0 0;color:#5e7472;font-size:12px}
+.maintenance-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.maintenance-form label{display:grid;gap:5px;color:#587471;font-size:11px;font-weight:700}
+.maintenance-form input,.maintenance-form select{border:1px solid #cbdedb;border-radius:9px;padding:9px 11px;font:inherit;color:#173b39}
+.maintenance-actions{grid-column:1/-1;display:flex;gap:8px}
+.maintenance-actions button{flex:1}
+@media (max-width:760px){.maintenance-form{grid-template-columns:1fr}}
 
 
 

@@ -4,10 +4,10 @@
 import { inventory } from './demo-data'
 
 export const initialOrders = [
-  { id: 'WO-2048', date: '30.08.2026', time: '09:00', client: 'Димитър Петров', phone: '+359 88 642 1180', car: 'Škoda Octavia', plate: 'CA 1842 AB', vin: 'TMBJF7NE0F0123456', mileage: 214500, service: 'Bremžu diagnostika', master: 'Николай', status: 'work', labor: 85, parts: 124, paid: false },
-  { id: 'WO-2047', date: '30.08.2026', time: '10:30', client: 'Мария Георгиева', phone: '+359 87 315 4477', car: 'Toyota Corolla', plate: 'CB 7788 MT', vin: 'SB1KD3LE20E123456', mileage: 168900, service: 'Eļļas un filtru maiņa', master: 'Стоян', status: 'ready', labor: 45, parts: 68, paid: false },
-  { id: 'WO-2046', date: '30.08.2026', time: '12:00', client: 'Георги Иванов', phone: '+359 88 903 2210', car: 'VW Passat', plate: 'PB 5200 XA', vin: 'WVWZZZ3CZFE123456', mileage: 302100, service: 'Piekare · priekšējā ass', master: 'Николай', status: 'waiting', labor: 110, parts: 236, paid: false },
-  { id: 'WO-2045', date: '29.08.2026', time: '15:30', client: 'Елена Тодорова', phone: '+359 89 744 5120', car: 'Dacia Duster', plate: 'B 1901 CH', vin: 'UU1HSDCEG12345678', mileage: 121400, service: 'Kondicioniera apkope', master: 'Стоян', status: 'done', labor: 55, parts: 24, paid: true },
+  { id: 'WO-2048', date: '30.09.2026', time: '09:00', client: 'Димитър Петров', phone: '+359 88 642 1180', car: 'Škoda Octavia', plate: 'CA 1842 AB', vin: 'TMBJF7NE0F0123456', mileage: 214500, service: 'Bremžu diagnostika', master: 'Николай', status: 'work', labor: 85, parts: 124, paid: false },
+  { id: 'WO-2047', date: '30.09.2026', time: '10:30', client: 'Мария Георгиева', phone: '+359 87 315 4477', car: 'Toyota Corolla', plate: 'CB 7788 MT', vin: 'SB1KD3LE20E123456', mileage: 168900, service: 'Eļļas un filtru maiņa', master: 'Стоян', status: 'ready', labor: 45, parts: 68, paid: false },
+  { id: 'WO-2046', date: '30.09.2026', time: '12:00', client: 'Георги Иванов', phone: '+359 88 903 2210', car: 'VW Passat', plate: 'PB 5200 XA', vin: 'WVWZZZ3CZFE123456', mileage: 302100, service: 'Piekare · priekšējā ass', master: 'Николай', status: 'waiting', labor: 110, parts: 236, paid: false },
+  { id: 'WO-2045', date: '29.09.2026', time: '15:30', client: 'Елена Тодорова', phone: '+359 89 744 5120', car: 'Dacia Duster', plate: 'B 1901 CH', vin: 'UU1HSDCEG12345678', mileage: 121400, service: 'Kondicioniera apkope', master: 'Стоян', status: 'done', labor: 55, parts: 24, paid: true },
 
   // History of the same cars — so the vehicle card shows a real timeline.
   { id: 'WO-2041', date: '12.05.2026', time: '09:30', client: 'Димитър Петров', phone: '+359 88 642 1180', car: 'Škoda Octavia', plate: 'CA 1842 AB', vin: 'TMBJF7NE0F0123456', mileage: 208300, service: 'Eļļas un filtru maiņa', master: 'Стоян', status: 'done', labor: 45, parts: 73, paid: true },
@@ -23,7 +23,7 @@ export const clients = [
   { name: 'Димитър Петров', phone: '+359 88 642 1180', car: 'Škoda Octavia', plate: 'CA 1842 AB', vin: 'TMBJF7NE0F0123456', visits: 4, spent: 746, debt: 209, history: ['12.05.2026 · Eļļas maiņa · €118', '03.02.2026 · Riepu montāža · €64'] },
   { name: 'Мария Георгиева', phone: '+359 87 315 4477', car: 'Toyota Corolla', plate: 'CB 7788 MT', vin: 'SB1KD3LE20E123456', visits: 7, spent: 1284, debt: 113, history: ['18.06.2026 · Bremžu kluči · €236', '21.03.2026 · Diagnostika · €45'] },
   { name: 'Георги Иванов', phone: '+359 88 903 2210', car: 'VW Passat', plate: 'PB 5200 XA', vin: 'WVWZZZ3CZFE123456', visits: 3, spent: 512, debt: 346, history: ['09.04.2026 · Zobsiksnas maiņa · €402', '17.01.2026 · Diagnostika · €45'] },
-  { name: 'Елена Тодорова', phone: '+359 89 744 5120', car: 'Dacia Duster', plate: 'B 1901 CH', vin: 'UU1HSDCEG12345678', visits: 5, spent: 935, debt: 0, history: ['29.08.2026 · Kondicioniera apkope · €79', '07.07.2026 · Eļļas maiņa · €126'] },
+  { name: 'Елена Тодорова', phone: '+359 89 744 5120', car: 'Dacia Duster', plate: 'B 1901 CH', vin: 'UU1HSDCEG12345678', visits: 5, spent: 935, debt: 0, history: ['29.09.2026 · Kondicioniera apkope · €79', '07.07.2026 · Eļļas maiņa · €126'] },
 ]
 
 export { inventory }
@@ -34,10 +34,15 @@ export const dataset = {
   initialOrders,
   clients,
   inventory,
-  // Filled in the next stages: the booking calendar and the per-vehicle maintenance schedule
-  // (ГТП до, Гражданска отговорност до, интервал ТО).
+  // Filled in the next stages: the booking calendar and the per-vehicle maintenance schedule.
   bookings: [],
-  maintenance: {},
+  // Регламент: ГТП по Наредба Н-32, Гражданска отговорност, винетка и интервал ТО.
+  maintenance: {
+    'vin:TMBJF7NE0F0123456': { category: 'M1', firstRegistration: '15.03.2018', gtiDue: '05.10.2026', insuranceDue: '27.09.2026', vignetteDue: '30.11.2026', serviceIntervalKm: 15000, lastServiceKm: 199800, lastServiceDate: '03.02.2026' },
+    'vin:SB1KD3LE20E123456': { category: 'M1', firstRegistration: '20.09.2015', gtiDue: '14.10.2026', insuranceDue: '30.09.2026', vignetteDue: '15.01.2027', serviceIntervalKm: 15000, lastServiceKm: 164200, lastServiceDate: '18.06.2026' },
+    'vin:WVWZZZ3CZFE123456': { category: 'M1', firstRegistration: '10.06.2013', gtiDue: '09.04.2027', insuranceDue: '12.10.2026', vignetteDue: '15.12.2026', serviceIntervalKm: 15000, lastServiceKm: 294700, lastServiceDate: '09.04.2026' },
+    'vin:UU1HSDCEG12345678': { category: 'M1', firstRegistration: '05.05.2021', gtiDue: '26.09.2026', insuranceDue: '20.10.2026', vignetteDue: '31.10.2026', serviceIntervalKm: 20000, lastServiceKm: 117900, lastServiceDate: '07.07.2026' },
+  },
   masters: ['Николай', 'Стоян'],
   newClient: { name: 'Иван Петров', car: 'Audi A4', plate: 'CA 1234 AB' },
   newPhone: '+359 88 000 0000',

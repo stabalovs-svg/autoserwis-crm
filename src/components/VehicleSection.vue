@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { formatMileage, searchVehicles } from '../lib/vehicles'
+import { maintenanceSummary } from '../lib/maintenance'
 import PlateScanner from './PlateScanner.vue'
 
 const props = defineProps({
@@ -9,13 +10,28 @@ const props = defineProps({
   locale: { type: String, default: 'lv-LV' },
   statusText: { type: Object, default: () => ({}) },
   photosCount: { type: Function, default: () => 0 },
+  maintenance: { type: Object, default: () => ({}) },
+  today: { type: String, default: '' },
 })
 const emit = defineEmits(['open', 'new-order'])
 
 const query = ref('')
-const found = computed(() => searchVehicles(props.vehicles, query.value))
-
 const isVinSearch = computed(() => /^[A-HJ-NPR-Z0-9]{17}$/i.test(query.value.trim()))
+
+// Самое срочное напоминание по автомобилю — маленький бейдж в списке машин.
+const rank = { overdue: 0, urgent: 1, soon: 2 }
+const shortTitles = { gti: 'maintGtiShort', insurance: 'maintInsuranceShort', service: 'maintServiceShort', vignette: 'maintVignette' }
+function dueFor(vehicle) {
+  const record = props.maintenance?.[vehicle.key]
+  if (!record) return null
+  const rows = maintenanceSummary({ record, mileage: vehicle.mileage || 0, visits: vehicle.visits || [], today: props.today })
+  const pick = rows.filter((row) => row.state in rank).sort((a, b) => rank[a.state] - rank[b.state])[0]
+  if (!pick) return null
+  const when = pick.state === 'overdue' ? props.t('maintOverdueState') : `${pick.daysLeft} ${props.t('maintDaysUnit')}`
+  return { state: pick.state, label: `${props.t(shortTitles[pick.key] || 'maintServiceShort')} · ${when}` }
+}
+
+const found = computed(() => searchVehicles(props.vehicles, query.value).map((vehicle) => ({ ...vehicle, due: dueFor(vehicle) })))
 </script>
 
 <template>
@@ -42,6 +58,7 @@ const isVinSearch = computed(() => /^[A-HJ-NPR-Z0-9]{17}$/i.test(query.value.tri
         <header>
           <span class="plate">{{ vehicle.plate }}</span>
           <em v-if="vehicle.open" class="open-badge">{{ vehicle.open }} · {{ t('inWork') }}</em>
+          <em v-if="vehicle.due" :class="['due-badge', vehicle.due.state]">{{ vehicle.due.label }}</em>
         </header>
 
         <h2>{{ vehicle.car || t('carUnknown') }}</h2>

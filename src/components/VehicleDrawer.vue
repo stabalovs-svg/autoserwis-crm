@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import PhotoStrip from './PhotoStrip.vue'
+import MaintenanceBlock from './MaintenanceBlock.vue'
 import { formatMileage, isValidVin } from '../lib/vehicles'
 
 const props = defineProps({
@@ -13,8 +14,10 @@ const props = defineProps({
   tag: { type: String, default: 'general' },
   vinInfo: { type: Object, default: null },
   vinBusy: { type: Boolean, default: false },
+  maintenance: { type: Object, default: null },
+  today: { type: String, default: '' },
 })
-const emit = defineEmits(['close', 'add-photos', 'remove-photo', 'open-photo', 'open-order', 'new-order', 'decode-vin', 'update:tag'])
+const emit = defineEmits(['close', 'add-photos', 'remove-photo', 'open-photo', 'open-order', 'new-order', 'decode-vin', 'update:tag', 'save-maintenance'])
 
 const vinValid = computed(() => isValidVin(props.vehicle.vin))
 const openVisit = computed(() => props.vehicle.visits.find((visit) => visit.status !== 'done') || null)
@@ -66,6 +69,15 @@ const openVisit = computed(() => props.vehicle.visits.find((visit) => visit.stat
       <small>{{ openVisit.id }} · {{ statusText[openVisit.status] }}</small>
       <button type="button" @click="emit('open-order', openVisit)">{{ t('openOrder') }} →</button>
     </div>
+
+    <MaintenanceBlock
+      :vehicle="vehicle"
+      :record="maintenance"
+      :t="t"
+      :locale="locale"
+      :today="today"
+      @save="emit('save-maintenance', $event)"
+    />
 
     <section class="photos">
       <h3>{{ t('photos') }}</h3>
