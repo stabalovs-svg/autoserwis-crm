@@ -1,7 +1,7 @@
 // Bulgarian demo set: the same story as the Latvian one, told for a Bulgarian workshop
 // (Sofia / Plovdiv / Varna plates, local client names, prices in euro, VINs that real cars carry).
 // Work and part names stay as catalogue keys (see lib/catalog.js) so they show in the UI language.
-import { inventory } from './demo-data'
+import { inventory } from './demo-data.js'
 
 export const initialOrders = [
   { id: 'WO-2048', date: '30.09.2026', time: '09:00', client: 'Димитър Петров', phone: '+359 88 642 1180', car: 'Škoda Octavia', plate: 'CA 1842 AB', vin: 'TMBJF7NE0F0123456', mileage: 214500, service: 'Bremžu diagnostika', master: 'Николай', status: 'work', labor: 85, parts: 124, paid: false },
@@ -31,6 +31,9 @@ export { inventory }
 export const dataset = {
   code: 'bg',
   shopLine: 'София · Демо автосервис',
+  workshopPhone: '+359 700 123 456',
+  // Согласия на съобщения: телефон (само цифри) -> { allowed, since }.
+  consents: {},
   initialOrders,
   clients,
   inventory,

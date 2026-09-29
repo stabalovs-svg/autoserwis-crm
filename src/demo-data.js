@@ -77,6 +77,9 @@ export const dataset = {
   masters: ['Jānis', 'Aleksandrs'],
   newClient: { name: 'Roberts Liepa', car: 'Audi A4', plate: 'RL-2026' },
   newPhone: '+371 2000 0000',
+  workshopPhone: '+371 6000 1234',
+  // Piekrišanas ziņām: telefons (tikai cipari) -> { allowed, since }.
+  consents: {},
   orderBase: 1048,
   logs: [
     { time: '10:18', type: 'status', id: 'WO-1047', status: 'ready' },
