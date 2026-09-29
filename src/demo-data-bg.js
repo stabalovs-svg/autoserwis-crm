@@ -34,8 +34,42 @@ export const dataset = {
   initialOrders,
   clients,
   inventory,
-  // Filled in the next stages: the booking calendar and the per-vehicle maintenance schedule.
-  bookings: [],
+  // График приёма: линия ГТП, два канала, шиномонтаж. Меняется одной строкой.
+  shop: {
+    openHours: { weekday: ['08:00', '18:00'], saturday: ['08:00', '14:00'] },
+    slotMinutes: 30,
+    resources: ['gti', 'bay1', 'bay2', 'tyres'],
+    types: { gti: 30, service: 90, diagnostics: 45, repair: 120, tyres: 60 },
+  },
+  bookings: [
+    // Сряда, 30.09.2026 — днешният график.
+    { id: 'BK-3041', date: '30.09.2026', start: '08:00', minutes: 60, resource: 'tyres', type: 'tyres', master: 'Стоян', plate: 'PB 5200 XA', car: 'VW Passat', client: 'Георги Иванов', phone: '+359 88 903 2210', vin: 'WVWZZZ3CZFE123456', status: 'done', note: 'Летни гуми' },
+    { id: 'BK-3042', date: '30.09.2026', start: '08:30', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CA 1842 AB', car: 'Škoda Octavia', client: 'Димитър Петров', phone: '+359 88 642 1180', vin: 'TMBJF7NE0F0123456', status: 'arrived', note: 'ГО е изтекла — да плати преди прегледа', orderId: 'WO-2048' },
+    { id: 'BK-3043', date: '30.09.2026', start: '09:00', minutes: 90, resource: 'bay2', type: 'service', master: 'Стоян', plate: 'CB 7788 MT', car: 'Toyota Corolla', client: 'Мария Георгиева', phone: '+359 87 315 4477', vin: 'SB1KD3LE20E123456', status: 'inWork', note: 'ТО + филтри' },
+    { id: 'BK-3044', date: '30.09.2026', start: '09:30', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'PB 4412 CA', car: 'Peugeot 308', client: 'Иванка Стоянова', phone: '+359 88 220 7741', status: 'confirmed', note: 'Нов клиент, пита за цена' },
+    { id: 'BK-3045', date: '30.09.2026', start: '10:00', minutes: 120, resource: 'bay1', type: 'repair', master: 'Николай', plate: 'B 6620 KH', car: 'Ford Focus', client: 'Румен Динев', phone: '+359 89 115 3390', status: 'confirmed', note: 'Спирачки, частите са налични' },
+    { id: 'BK-3046', date: '30.09.2026', start: '10:30', minutes: 30, resource: 'gti', type: 'gti', master: 'Стоян', plate: 'CB 7788 MT', car: 'Toyota Corolla', client: 'Мария Георгиева', phone: '+359 87 315 4477', status: 'confirmed' },
+    { id: 'BK-3047', date: '30.09.2026', start: '11:30', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CA 9081 BT', car: 'Opel Astra', client: 'Петър Маринов', phone: '+359 87 664 2019', status: 'confirmed' },
+    { id: 'BK-3048', date: '30.09.2026', start: '13:00', minutes: 45, resource: 'bay1', type: 'diagnostics', master: 'Николай', plate: 'B 1901 CH', car: 'Dacia Duster', client: 'Елена Тодорова', phone: '+359 89 744 5120', vin: 'UU1HSDCEG12345678', status: 'confirmed', note: 'ГТП е изтекъл — да се коментира' },
+    { id: 'BK-3049', date: '30.09.2026', start: '13:00', minutes: 30, resource: 'gti', type: 'gti', master: 'Стоян', plate: 'PB 7745 KH', car: 'Renault Clio', client: 'Николай Колев', phone: '+359 88 501 8834', status: 'confirmed' },
+    { id: 'BK-3050', date: '30.09.2026', start: '14:30', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CA 3311 MK', car: 'Hyundai i30', client: 'Светла Димитрова', phone: '+359 87 218 4470', status: 'confirmed' },
+    { id: 'BK-3051', date: '30.09.2026', start: '15:00', minutes: 90, resource: 'bay2', type: 'service', master: 'Стоян', plate: 'B 4478 CT', car: 'Kia Sportage', client: 'Тодор Ангелов', phone: '+359 88 776 1122', status: 'confirmed', note: 'ТО преди зимата' },
+    { id: 'BK-3052', date: '30.09.2026', start: '16:00', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CA 1180 TP', car: 'VW Polo', client: 'Яна Кирилова', phone: '+359 89 330 5566', status: 'confirmed' },
+    // Останалите дни от седмицата — за да се вижда заетостта и свободните прозорци.
+    { id: 'BK-3031', date: '28.09.2026', start: '09:00', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CA 5540 EA', car: 'Seat Ibiza', client: 'Милен Дяков', phone: '+359 88 401 9932', status: 'done' },
+    { id: 'BK-3032', date: '28.09.2026', start: '10:30', minutes: 120, resource: 'bay1', type: 'repair', master: 'Стоян', plate: 'PB 2299 MP', car: 'BMW 320d', client: 'Красимир Илиев', phone: '+359 87 990 2214', status: 'done' },
+    { id: 'BK-3033', date: '29.09.2026', start: '08:30', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CB 6655 HK', car: 'Honda Civic', client: 'Даниела Петкова', phone: '+359 88 512 7744', status: 'noShow', note: 'Не дойде, да се обадим' },
+    { id: 'BK-3034', date: '29.09.2026', start: '10:00', minutes: 90, resource: 'bay2', type: 'service', master: 'Стоян', plate: 'CA 7712 CB', car: 'Škoda Superb', client: 'Антон Василев', phone: '+359 89 664 1108', status: 'done' },
+    { id: 'BK-3035', date: '29.09.2026', start: '13:00', minutes: 60, resource: 'tyres', type: 'tyres', master: 'Стоян', plate: 'B 8890 PA', car: 'Dacia Sandero', client: 'Радка Тонева', phone: '+359 87 445 3321', status: 'cancelled', note: 'Отмени, ще звънне' },
+    { id: 'BK-3036', date: '01.10.2026', start: '09:00', minutes: 30, resource: 'gti', type: 'gti', master: 'Николай', plate: 'CA 2201 AB', car: 'Fiat Tipo', client: 'Габриела Стоилова', phone: '+359 88 903 1187', status: 'confirmed' },
+    { id: 'BK-3037', date: '01.10.2026', start: '11:00', minutes: 120, resource: 'bay1', type: 'repair', master: 'Стоян', plate: 'PB 3390 XA', car: 'Mercedes C220', client: 'Стоян Гърков', phone: '+359 89 210 4478', status: 'confirmed' },
+    { id: 'BK-3038', date: '02.10.2026', start: '10:00', minutes: 90, resource: 'bay2', type: 'service', master: 'Николай', plate: 'CB 1122 MT', car: 'Nissan Qashqai', client: 'Виолета Илиева', phone: '+359 88 664 9021', status: 'confirmed' },
+    { id: 'BK-3039', date: '03.10.2026', start: '09:00', minutes: 60, resource: 'tyres', type: 'tyres', master: 'Стоян', plate: 'CA 4402 TP', car: 'Renault Megane', client: 'Иво Петров', phone: '+359 87 771 6620', status: 'confirmed', note: 'Смяна на гуми' },
+    // Лист на изчакване: заявки, на които още не е определен час.
+    { id: 'BK-3055', date: '30.09.2026', start: '', minutes: 30, resource: 'gti', type: 'gti', master: '', plate: 'CA 8899 BT', car: 'Citroën C4', client: 'Любка Иванова', phone: '+359 89 550 3344', status: 'request', note: 'Иска преглед тази седмица' },
+    { id: 'BK-3056', date: '30.09.2026', start: '', minutes: 90, resource: 'bay1', type: 'service', master: '', plate: '', car: 'VW Golf', client: 'Николай Спасов', phone: '+359 88 212 7788', status: 'request', note: 'Пита кога има място' },
+    { id: 'BK-3057', date: '30.09.2026', start: '', minutes: 30, resource: 'gti', type: 'gti', master: '', plate: '', car: 'Toyota Yaris', client: 'Десислава Колева', phone: '+359 87 664 9930', status: 'request', note: 'Изтърва ГТП, иска днес' },
+  ],
   // Регламент: ГТП по Наредба Н-32, Гражданска отговорност, винетка и интервал ТО.
   maintenance: {
     'vin:TMBJF7NE0F0123456': { category: 'M1', firstRegistration: '15.03.2018', gtiDue: '05.10.2026', insuranceDue: '27.09.2026', vignetteDue: '30.11.2026', serviceIntervalKm: 15000, lastServiceKm: 199800, lastServiceDate: '03.02.2026' },
