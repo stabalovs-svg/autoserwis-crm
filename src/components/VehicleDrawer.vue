@@ -16,6 +16,7 @@ const props = defineProps({
   vinBusy: { type: Boolean, default: false },
   maintenance: { type: Object, default: null },
   today: { type: String, default: '' },
+  margin: { type: Object, default: null },
 })
 const emit = defineEmits(['close', 'add-photos', 'remove-photo', 'open-photo', 'open-order', 'new-order', 'decode-vin', 'update:tag', 'save-maintenance'])
 
@@ -55,6 +56,11 @@ const openVisit = computed(() => props.vehicle.visits.find((visit) => visit.stat
         <span>{{ t('spentAll') }}</span>
         <strong>€{{ vehicle.total }}</strong>
         <small v-if="vehicle.debt" class="warn">{{ t('debt') }} €{{ vehicle.debt }}</small>
+      </div>
+      <div v-if="margin && margin.revenue">
+        <span>{{ t('stkMargin') }}</span>
+        <strong>€{{ margin.margin }} · {{ margin.percent }}%</strong>
+        <small>{{ t('stkCost') }} €{{ margin.cost }}</small>
       </div>
     </div>
 

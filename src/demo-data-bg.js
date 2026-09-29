@@ -37,6 +37,21 @@ export const dataset = {
   initialOrders,
   clients,
   inventory,
+  // Движения по складу: приходы от доставчици и списания по нарядам.
+  stockMoves: [
+    { id: 'SM-3011', article: 'BP-881', kind: 'in', qty: 4, buyPrice: 54, supplier: 'Auto Plus', date: '25.09.2026', note: 'Доставка' },
+    { id: 'SM-3009', article: 'OL-5W30', kind: 'in', qty: 24, buyPrice: 8.2, supplier: 'Inter Cars', date: '22.09.2026' },
+    { id: 'SM-3010', article: 'AF-115', kind: 'in', qty: 6, buyPrice: 11, supplier: 'Auto Plus', date: '20.09.2026' },
+    { id: 'SM-3008', article: 'OF-204', kind: 'in', qty: 10, buyPrice: 7.4, supplier: 'Inter Cars', date: '29.09.2026' },
+    { id: 'SM-3012', article: 'AF-115', kind: 'return', qty: 1, buyPrice: 11, supplier: 'Auto Plus', date: '28.09.2026', note: 'Не пасна — върнахме в склада' },
+    { id: 'SM-3001', article: 'BP-881', kind: 'out', qty: 2, buyPrice: 54, orderId: 'WO-2048', master: 'Николай', date: '30.09.2026' },
+    { id: 'SM-3002', article: 'OF-204', kind: 'out', qty: 1, buyPrice: 7.4, orderId: 'WO-2048', master: 'Николай', date: '30.09.2026' },
+    { id: 'SM-3003', article: 'OL-5W30', kind: 'out', qty: 4, buyPrice: 8.2, orderId: 'WO-2048', master: 'Николай', date: '30.09.2026' },
+    { id: 'SM-3004', article: 'OF-204', kind: 'out', qty: 1, buyPrice: 7.4, orderId: 'WO-2041', master: 'Стоян', date: '12.05.2026' },
+    { id: 'SM-3005', article: 'OL-5W30', kind: 'out', qty: 3, buyPrice: 8.2, orderId: 'WO-2041', master: 'Стоян', date: '12.05.2026' },
+    { id: 'SM-3006', article: 'BP-881', kind: 'out', qty: 2, buyPrice: 54, orderId: 'WO-2039', master: 'Николай', date: '18.06.2026' },
+    { id: 'SM-3007', article: 'AF-115', kind: 'out', qty: 1, buyPrice: 11, orderId: 'WO-2037', master: 'Николай', date: '09.04.2026' },
+  ],
   // График приёма: линия ГТП, два канала, шиномонтаж. Меняется одной строкой.
   shop: {
     openHours: { weekday: ['08:00', '18:00'], saturday: ['08:00', '14:00'] },

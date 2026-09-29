@@ -34,6 +34,20 @@ export const dataset = {
   initialOrders,
   clients,
   inventory,
+  // Noliktavas kustības: pieņemšana no piegādātājiem un norakstīšana darba uzdevumiem.
+  stockMoves: [
+    { id: 'SM-1011', article: 'BP-881', kind: 'in', qty: 4, buyPrice: 54, supplier: 'Auto Plus', date: '25.09.2026' },
+    { id: 'SM-1009', article: 'OL-5W30', kind: 'in', qty: 24, buyPrice: 8.2, supplier: 'Inter Cars', date: '22.09.2026' },
+    { id: 'SM-1010', article: 'AF-115', kind: 'in', qty: 6, buyPrice: 11, supplier: 'Auto Plus', date: '20.09.2026' },
+    { id: 'SM-1008', article: 'OF-204', kind: 'in', qty: 10, buyPrice: 7.4, supplier: 'Inter Cars', date: '29.09.2026' },
+    { id: 'SM-1001', article: 'BP-881', kind: 'out', qty: 2, buyPrice: 54, orderId: 'WO-1048', master: 'Jānis', date: '30.09.2026' },
+    { id: 'SM-1002', article: 'OF-204', kind: 'out', qty: 1, buyPrice: 7.4, orderId: 'WO-1048', master: 'Jānis', date: '30.09.2026' },
+    { id: 'SM-1003', article: 'OL-5W30', kind: 'out', qty: 4, buyPrice: 8.2, orderId: 'WO-1048', master: 'Jānis', date: '30.09.2026' },
+    { id: 'SM-1004', article: 'OF-204', kind: 'out', qty: 1, buyPrice: 7.4, orderId: 'WO-1041', master: 'Aleksandrs', date: '12.05.2026' },
+    { id: 'SM-1005', article: 'OL-5W30', kind: 'out', qty: 3, buyPrice: 8.2, orderId: 'WO-1041', master: 'Aleksandrs', date: '12.05.2026' },
+    { id: 'SM-1006', article: 'BP-881', kind: 'out', qty: 2, buyPrice: 54, orderId: 'WO-1039', master: 'Jānis', date: '18.06.2026' },
+    { id: 'SM-1007', article: 'AF-115', kind: 'out', qty: 1, buyPrice: 11, orderId: 'WO-1037', master: 'Jānis', date: '09.04.2026' },
+  ],
   // Pieņemšanas grafiks: tehniskās apskates līnija, divi kanāli, riepu montāža.
   shop: {
     openHours: { weekday: ['08:00', '18:00'], saturday: ['08:00', '14:00'] },
