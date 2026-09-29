@@ -160,11 +160,29 @@
 .cal-block{display:grid;gap:1px;padding:5px 7px;border:0;border-left:4px solid #cfe0dd;border-radius:8px;background:#f3faf9;text-align:left;cursor:pointer}
 .cal-block strong{font-size:12px}
 .cal-block small{font-size:10px;color:#6f8c89}
-.cal-block.gti{border-left-color:#0b8179}
-.cal-block.service{border-left-color:#4c9bd6}
-.cal-block.repair{border-left-color:#c0562f}
-.cal-block.diagnostics{border-left-color:#9dc06a}
-.cal-block.tyres{border-left-color:#8a6a12}
+.cal-chips{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.cal-chip{width:24px;height:24px;padding:0;border:1px solid #dfe9e7;border-radius:7px;background:#fff;font:inherit;font-size:11px;font-weight:800;color:#8fa2a0;cursor:pointer}
+.cal-chip.gti{border-color:#9fd8cd;color:#0b8179}
+.cal-chip.bay1{border-color:#b6d5ee;color:#3f8fd0}
+.cal-chip.bay2{border-color:#cdbcec;color:#8a5ccf}
+.cal-chip.tyres{border-color:#e6cf95;color:#8a6a12}
+.cal-chip:not(.active){opacity:.6}
+.cal-chip.gti.active{background:#0b8179;border-color:#0b8179;color:#fff}
+.cal-chip.bay1.active{background:#3f8fd0;border-color:#3f8fd0;color:#fff}
+.cal-chip.bay2.active{background:#8a5ccf;border-color:#8a5ccf;color:#fff}
+.cal-chip.tyres.active{background:#c98a12;border-color:#c98a12;color:#fff}
+.cal-block.gti,.cal-card.gti{border-left-color:#0b8179}
+.cal-card.gti{background:#f1faf8}
+.cal-block.bay1,.cal-card.bay1{border-left-color:#3f8fd0}
+.cal-card.bay1{background:#f2f8fd}
+.cal-block.bay2,.cal-card.bay2{border-left-color:#8a5ccf}
+.cal-card.bay2{background:#f7f4fd}
+.cal-block.tyres,.cal-card.tyres{border-left-color:#c98a12}
+.cal-card.tyres{background:#fdf9ef}
+.cal-day-col.gti{border-top:3px solid #0b8179}
+.cal-day-col.bay1{border-top:3px solid #3f8fd0}
+.cal-day-col.bay2{border-top:3px solid #8a5ccf}
+.cal-day-col.tyres{border-top:3px solid #c98a12}
 .cal-block.done,.cal-card.done{opacity:.55}
 .cal-block.cancelled,.cal-card.cancelled{opacity:.4;text-decoration:line-through}
 .cal-block.noShow,.cal-card.noShow{background:#fff3d6}

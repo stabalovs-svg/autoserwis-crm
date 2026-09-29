@@ -23,6 +23,8 @@ const emit = defineEmits(['create', 'update', 'remove', 'order', 'view', 'anchor
 const form = ref(null)
 const selected = ref(null)
 const conflictWarning = ref('')
+// Фокус дня в недельном виде: по умолчанию линия ГТП, '' = все посты.
+const dayFilters = ref({})
 
 const anchorDate = computed(() => props.anchor || props.today)
 const days = computed(() => periodDaysOf(anchorDate.value, props.view))
@@ -45,6 +47,40 @@ const statusLabel = (status) => props.t('st' + status.charAt(0).toUpperCase() + 
 
 const bookingsAt = (day, resource, start) => (grid.value[day] || []).filter((item) => item.resource === resource
   && item.start === start)
+
+// «Г», «1», «2», «🛞» — короткие метки постов для квадратиков в шапке дня.
+const chipKeys = { gti: 'chipGti', bay1: 'chipBay1', bay2: 'chipBay2', tyres: 'chipTyres' }
+const chipLabel = (resource) => props.t(chipKeys[resource] || 'chipBay1')
+
+const dayFilter = (day) => (day in dayFilters.value ? dayFilters.value[day] : 'gti')
+function toggleDayFilter(day, resource) {
+  const current = dayFilter(day)
+  dayFilters.value = { ...dayFilters.value, [day]: current === resource ? '' : resource }
+}
+function showAllDays() {
+  const next = {}
+  days.value.forEach((day) => { next[day] = '' })
+  dayFilters.value = next
+}
+const visibleFor = (day) => {
+  const filter = dayFilter(day)
+  return (grid.value[day] || []).filter((item) => !filter || item.resource === filter)
+}
+
+// Загрузка дня считается по выбранному посту, а не по всему сервису.
+function dayPercent(day) {
+  const filter = dayFilter(day)
+  const slots = daySlots(day, props.shop)
+  const step = props.shop.slotMinutes || 30
+  const resources = filter ? [filter] : resources.value
+  const capacity = slots.length * step * resources.length
+  if (!capacity) return 0
+  const booked = (grid.value[day] || [])
+    .filter((item) => (filter ? item.resource === filter : true)
+      && ACTIVE_STATUSES.includes(item.status || 'confirmed'))
+    .reduce((sum, item) => sum + (Number(item.minutes) || step), 0)
+  return Math.round((booked / capacity) * 100)
+}
 
 const freeAt = (day, resource, minutes) => freeSlots({ date: day, resource, list: props.bookings, shop: props.shop, minutes })
 
@@ -145,6 +181,7 @@ function exportIcs() {
       <div class="cal-tools">
         <button type="button" class="primary" @click="openForm({ date: today })">＋ {{ t('calNew') }}</button>
         <button type="button" class="secondary" @click="exportIcs">⤓ .ics</button>
+        <button v-if="view === 'week'" type="button" class="secondary" @click="showAllDays">{{ t('chipAll') }}</button>
         <button type="button" class="secondary" @click="emit('print')">🖨</button>
       </div>
     </div>
@@ -165,7 +202,7 @@ function exportIcs() {
     <div v-if="view === 'day'" class="cal-day">
       <div class="cal-day-head">
         <div class="cal-day-col">{{ t('calTime') }}</div>
-        <div v-for="resource in resources" :key="resource" class="cal-day-col">{{ resourceLabel(resource) }}</div>
+        <div v-for="resource in resources" :key="resource" :class="['cal-day-col', resource]">{{ resourceLabel(resource) }}</div>
       </div>
       <div class="cal-day-body">
         <div v-for="slot in slots" :key="slot" class="cal-row">
@@ -175,7 +212,7 @@ function exportIcs() {
               v-for="item in bookingsAt(anchorDate, resource, slot)"
               :key="item.id"
               type="button"
-              :class="['cal-block', item.status, item.type]"
+              :class="['cal-block', item.status, item.resource]"
               @click="selected = item"
             >
               <strong>{{ item.car || item.plate || item.client }}</strong>
@@ -200,20 +237,30 @@ function exportIcs() {
         <header>
           <strong>{{ formatLong(day, locale).split(',')[0] }}</strong>
           <small>{{ day.slice(0, 5) }}</small>
-          <em>{{ dayStats(day).percent }}%</em>
+          <em>{{ dayPercent(day) }}%</em>
         </header>
-        <button v-if="daySlots(day, shop).length" type="button" class="cal-add" @click="openForm({ date: day })">＋</button>
+        <div v-if="daySlots(day, shop).length" class="cal-chips">
+          <button
+            v-for="resource in resources"
+            :key="resource"
+            type="button"
+            :class="['cal-chip', resource, { active: dayFilter(day) === resource }]"
+            :title="resourceLabel(resource)"
+            @click="toggleDayFilter(day, resource)"
+          >{{ chipLabel(resource) }}</button>
+          <button type="button" class="cal-add" @click="openForm({ date: day })">＋</button>
+        </div>
         <div
-          v-for="item in grid[day]"
+          v-for="item in visibleFor(day)"
           :key="item.id"
-          :class="['cal-card', item.status, item.type]"
+          :class="['cal-card', item.status, item.resource]"
           @click="selected = item"
         >
           <b>{{ item.start }}</b>
           <span>{{ item.car || item.plate || item.client }}</span>
           <small>{{ item.resource === 'gti' ? typeLabel(item.type) : resourceLabel(item.resource) }}</small>
         </div>
-        <p v-if="!grid[day].length" class="cal-none">{{ daySlots(day, shop).length ? t('calEmpty') : t('calClosed') }}</p>
+        <p v-if="!visibleFor(day).length" class="cal-none">{{ daySlots(day, shop).length ? t('calEmpty') : t('calClosed') }}</p>
       </div>
     </div>
 
