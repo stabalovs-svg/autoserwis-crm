@@ -212,7 +212,61 @@ const PLATE_PASSES = [
   { crop: [0.05, 0.30, 0.95, 0.95], psm: '7', targetSide: 2400 },
 ]
 
-export async function scanPlate(file, onProgress, { knownPlates = [] } = {}) {
+// Если мастер сам выделил номер пальцем, ищем только в этой области —
+// тогда OCR не отвлекается на кузов, тени и фон вокруг.
+function padRect(rect, grow = 0.03) {
+  const x = Math.max(0, rect.x - grow)
+  const y = Math.max(0, rect.y - grow)
+  const w = Math.min(1 - x, rect.w + grow * 2)
+  const h = Math.min(1 - y, rect.h + grow * 2)
+  return [x, y, x + w, y + h]
+}
+
+export function rectToCrop(rect) {
+  if (!rect || !(rect.w > 0) || !(rect.h > 0)) return null
+  return padRect(rect, 0.04)
+}
+
+// Выделенную область выравниваем: OCR теряет знаки, если номер снят под углом,
+// поэтому пробуем несколько поворотов и размеров и берём лучший результат.
+function regionVariants(image, rect, { angles = [0, -6, 6, -11, 11], sides = [1800, 2400], psm = ['7', '8'] } = {}) {
+  const crop = rectToCrop(rect)
+  if (!crop) return []
+  const [x0, y0, x1, y1] = crop
+  const source = {
+    x: Math.round(image.width * x0),
+    y: Math.round(image.height * y0),
+    w: Math.max(1, Math.round(image.width * (x1 - x0))),
+    h: Math.max(1, Math.round(image.height * (y1 - y0))),
+  }
+  const variants = []
+  angles.forEach((angle) => {
+    sides.forEach((targetSide) => {
+      const scale = Math.min(3.5, Math.max(0.2, targetSide / Math.max(source.w, source.h)))
+      const width = Math.max(1, Math.round(source.w * scale))
+      const height = Math.max(1, Math.round(source.h * scale))
+      // Холст ровно по границам повёрнутого номера: лишний фон портит контраст.
+      const rad = (Math.abs(angle) * Math.PI) / 180
+      const boxW = Math.round(Math.abs(width * Math.cos(rad)) + Math.abs(height * Math.sin(rad)))
+      const boxH = Math.round(Math.abs(width * Math.sin(rad)) + Math.abs(height * Math.cos(rad)))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.max(1, boxW)
+      canvas.height = Math.max(1, boxH)
+      const context = canvas.getContext('2d')
+      context.fillStyle = '#8a8a8a'
+      context.fillRect(0, 0, canvas.width, canvas.height)
+      context.imageSmoothingEnabled = true
+      context.imageSmoothingQuality = 'high'
+      context.translate(canvas.width / 2, canvas.height / 2)
+      context.rotate((angle * Math.PI) / 180)
+      context.drawImage(image, source.x, source.y, source.w, source.h, -width / 2, -height / 2, width, height)
+      variants.push({ canvas: softContrast(canvas), psm })
+    })
+  })
+  return variants
+}
+
+export async function scanPlate(file, onProgress, { knownPlates = [], rect = null } = {}) {
   if (engineName() !== 'local') {
     const rows = await scanPlateApi(file, onProgress)
     if (rows && rows.length) {
@@ -225,23 +279,40 @@ export async function scanPlate(file, onProgress, { knownPlates = [] } = {}) {
   let raw = ''
   let confidence = 0
 
-  for (const pass of PLATE_PASSES) {
-    const canvas = prepare(image, { crop: pass.crop, targetSide: pass.targetSide || 1400 })
-    const result = await readText(worker, canvas, PLATE_WHITELIST, pass.psm)
-    raw = raw ? raw + ' | ' + result.text : result.text
-    if (result.confidence > confidence) confidence = result.confidence
-    for (const found of plateCandidates(result.text)) {
+  // Ручное выделение: перебираем выравнивание и масштаб. Авторежим: зоны кадра.
+  const manual = rect ? regionVariants(image, rect) : []
+  const collect = (text, score) => {
+    raw = raw ? raw + ' | ' + text : text
+    if (score > confidence) confidence = score
+    for (const found of plateCandidates(text)) {
       const known = matchKnownPlate(found.value, knownPlates)
       const existing = candidates.find((item) => item.value === found.value)
       if (existing) {
-        existing.score = Math.max(existing.score || 0, result.confidence)
+        existing.score = Math.max(existing.score || 0, score)
         if (known) existing.known = known.plate
       } else {
-        candidates.push({ ...found, score: result.confidence, known: known ? known.plate : '' })
+        candidates.push({ ...found, score, known: known ? known.plate : '' })
       }
     }
     // Хороший результат: номер узнали в базе или прочитали уверенно.
-    if (candidates.some((item) => item.known) || candidates.some((item) => (item.score || 0) >= 55)) break
+    return candidates.some((item) => item.known) || candidates.some((item) => (item.score || 0) >= 60)
+  }
+
+  if (manual.length) {
+    let done = false
+    for (const variant of manual) {
+      for (const mode of variant.psm) {
+        const result = await readText(worker, variant.canvas, PLATE_WHITELIST, mode)
+        if (collect(result.text, result.confidence)) { done = true; break }
+      }
+      if (done) break
+    }
+  } else {
+    for (const pass of PLATE_PASSES) {
+      const canvas = prepare(image, { crop: pass.crop, targetSide: pass.targetSide || 1400 })
+      const result = await readText(worker, canvas, PLATE_WHITELIST, pass.psm)
+      if (collect(result.text, result.confidence)) break
+    }
   }
 
   candidates.sort((a, b) => (b.known ? 1 : 0) - (a.known ? 1 : 0)

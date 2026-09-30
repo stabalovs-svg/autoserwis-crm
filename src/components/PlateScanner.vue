@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { engineName, scanPlate, scanVin, warmUp } from '../lib/recognition'
 import { plateKey, vinChecksumOk } from '../lib/plates'
 import { decodeVin } from '../lib/vehicles'
+import PlateAreaPicker from './PlateAreaPicker.vue'
 
 const props = defineProps({
   vehicles: { type: Array, default: () => [] },
@@ -17,6 +18,8 @@ const error = ref('')
 const preview = ref('')
 const result = ref(null)
 const manual = ref('')
+const pickedFile = ref(null)
+const picking = ref(false)
 const engine = engineName()
 
 function findVehicle(value) {
@@ -47,22 +50,39 @@ async function pick(event, next) {
   progress.value = 3
   if (preview.value) URL.revokeObjectURL(preview.value)
   preview.value = URL.createObjectURL(file)
+  pickedFile.value = file
+  await scan(file, null)
+}
+
+// Общий путь для авто-распознавания и для области, выделенной пальцем.
+async function scan(file, rect) {
+  busy.value = true
+  error.value = ''
+  if (rect) progress.value = 5
   try {
+    const next = kind.value
     const read = next === 'plate' ? scanPlate : scanVin
     const output = next === 'plate'
-      ? await read(file, (value) => { progress.value = value }, { knownPlates: knownPlates.value })
+      ? await read(file, (value) => { progress.value = value }, { knownPlates: knownPlates.value, rect })
       : await read(file, (value) => { progress.value = value })
     result.value = output
     const sure = output.source === 'barcode' || output.known || (output.kind === 'vin' ? vinChecksumOk(output.value) : output.confidence >= 60)
     manual.value = sure ? output.value || '' : ''
     if (!output.value) error.value = props.t('scanNothing')
     else if (!sure) error.value = props.t('scanLowConfidence')
+    // Не получилось с первого раза — предлагаем оградить номер вручную.
+    if (next === 'plate' && !output.known && (output.confidence || 0) < 60) picking.value = true
   } catch {
     error.value = props.t('scanFailed')
   } finally {
     busy.value = false
     progress.value = 0
   }
+}
+
+async function useArea(rect) {
+  picking.value = false
+  if (pickedFile.value) await scan(pickedFile.value, rect)
 }
 
 async function createOrder() {
@@ -103,6 +123,7 @@ async function createOrder() {
       </label>
       <small class="scanner-hint">{{ t('scanHint') }}</small>
     </div>
+    <button v-if="preview && pickedFile" type="button" class="secondary full" @click="picking = true">✂ {{ t('scanAreaPick') }}</button>
     <small class="scanner-tips">{{ t('scanTips') }}</small>
 
     <div v-if="busy" class="scanner-busy">
@@ -143,5 +164,13 @@ async function createOrder() {
         </div>
       </div>
     </div>
-  </section>
+      <PlateAreaPicker
+      v-if="picking && preview"
+      :image-url="preview"
+      :t="t"
+      @select="useArea"
+      @cancel="picking = false"
+    />
+
+</section>
 </template>

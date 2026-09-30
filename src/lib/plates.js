@@ -16,16 +16,27 @@ export function plateKey(value) {
   return normalizePlate(value)
 }
 
+const BG_LETTERS = 'ABCEHKMOPTX'
+const BG_LETTER_FIX = { R: 'B', D: 'O', U: 'O', Q: 'O', V: 'X', W: 'X', Y: 'X', Z: 'X', F: 'E', G: 'C', I: 'H', J: 'H', L: 'E', N: 'H', S: 'B' }
+
 // Приводим прочитанное к маске: L = буква, d = цифра. strict = без подмен символов.
-function toMask(clean, mask) {
+function toMask(clean, mask, letters) {
   if (clean.length !== mask.length) return null
   let out = ''
   let strict = true
   for (let index = 0; index < mask.length; index += 1) {
     const char = clean[index]
     if (mask[index] === 'L') {
-      if (/[A-Z]/.test(char)) out += char
-      else if (LETTER_OF[char]) { out += LETTER_OF[char]; strict = false }
+      if (/[A-Z]/.test(char)) {
+        if (letters && !letters.includes(char)) {
+          const fixed = BG_LETTER_FIX[char]
+          if (!fixed) return null
+          out += fixed
+          strict = false
+          continue
+        }
+        out += char
+      } else if (LETTER_OF[char]) { out += LETTER_OF[char]; strict = false }
       else return null
     } else if (/[0-9]/.test(char)) out += char
     else if (DIGIT_OF[char]) { out += DIGIT_OF[char]; strict = false }
@@ -36,8 +47,8 @@ function toMask(clean, mask) {
 
 // Болгарские номера: CA 1842 AB (1–2 буквы, 4 цифры, 2 буквы), латвийские: AB-1842.
 const MASKS = [
-  { mask: 'LLddddLL', country: 'BG', format: (value) => `${value.slice(0, 2)} ${value.slice(2, 6)} ${value.slice(6)}` },
-  { mask: 'LddddLL', country: 'BG', format: (value) => `${value[0]} ${value.slice(1, 5)} ${value.slice(5)}` },
+  { mask: 'LLddddLL', country: 'BG', letters: BG_LETTERS, format: (value) => `${value.slice(0, 2)} ${value.slice(2, 6)} ${value.slice(6)}` },
+  { mask: 'LddddLL', country: 'BG', letters: BG_LETTERS, format: (value) => `${value[0]} ${value.slice(1, 5)} ${value.slice(5)}` },
   { mask: 'LLdddd', country: 'LV', format: (value) => `${value.slice(0, 2)}-${value.slice(2)}` },
   { mask: 'LLLdddd', country: 'LV', format: (value) => `${value.slice(0, 3)}-${value.slice(3)}` },
 ]
@@ -49,9 +60,9 @@ export function plateCandidates(raw) {
     .toUpperCase()
     .replace(/[^A-Z0-9]+/g, '')
   const hits = []
-  MASKS.forEach(({ mask, country, format }) => {
+  MASKS.forEach(({ mask, country, format, letters }) => {
     for (let start = 0; start + mask.length <= text.length; start += 1) {
-      const shaped = toMask(text.slice(start, start + mask.length), mask)
+      const shaped = toMask(text.slice(start, start + mask.length), mask, letters)
       if (!shaped) continue
       hits.push({
         value: format(shaped.value),
@@ -65,7 +76,8 @@ export function plateCandidates(raw) {
   })
   // Сначала совпадения без подмен (они надёжнее), затем более длинные; перекрывающиеся
   // отбрасываем, чтобы «CA1842AB» не превращался ещё и в «CA-1842».
-  hits.sort((a, b) => Number(b.strict) - Number(a.strict) || b.length - a.length || a.start - b.start)
+  // Сначала самые длинные совпадения: полный болгарский номер важнее его усечённого начала.
+  hits.sort((a, b) => b.length - a.length || Number(b.strict) - Number(a.strict) || a.start - b.start)
   const found = []
   hits.forEach((hit) => {
     if (found.some((item) => hit.start < item.end && item.start < hit.end)) return

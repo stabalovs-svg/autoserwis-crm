@@ -300,3 +300,15 @@
 
 
 
+.area-picker{align-items:center;justify-content:center;padding:18px}
+.area-modal{background:#fff;border-radius:18px;padding:18px;max-width:min(760px,96vw);display:grid;gap:10px}
+.area-modal .eyebrow{margin:0}
+.area-modal h2{margin:0;font-size:19px}
+.area-lead{margin:0;color:#5e7472;font-size:13px}
+.area-box{position:relative;background:#0d1214;border-radius:12px;overflow:hidden;touch-action:none;cursor:crosshair;max-height:64vh}
+.area-box img{display:block;width:100%;max-height:64vh;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.area-rect{position:absolute;border:3px solid #7bd1c5;border-radius:6px;background:#7bd1c522;box-shadow:0 0 0 9999px #0d121466;pointer-events:none}
+.area-hint{margin:0;color:#8fa2a0;font-size:11px}
+.area-actions{display:flex;gap:8px}
+.area-actions button{flex:1}
+@media (max-width:700px){.area-modal{padding:14px}.area-actions{flex-direction:column}}
